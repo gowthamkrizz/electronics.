@@ -447,7 +447,7 @@
         rgba(201, 124, 61, 0.10),
         rgba(111, 224, 160, 0.15)
       );
-      -webkit-mask-: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
       animation: borderRotate 12s linear infinite;
@@ -851,7 +851,9 @@
   <!-- ===== LOGIN CARD ===== -->
   <div class="login-card">
     <div class="logo">
-      <img src="logo.webp" alt="Stackly Logo">
+      <!-- In production, replace with <img src="logo.webp" alt="Stackly Logo"> -->
+      <span style="font-size:1.8rem; letter-spacing:-0.02em;">⏣</span>
+      <span>Stackly</span>
     </div>
     <p class="sub"><span class="status-dot"></span>Secure · Electronics Manufacturing</p>
 
@@ -868,6 +870,7 @@
       <div class="form-group">
         <label>Password</label>
         <input type="password" id="loginPassword" placeholder="••••••••" required>
+        <div class="error-message" id="passwordError">Please enter your password</div>
       </div>
       <div class="role-selector">
         <label><input type="radio" name="loginRole" value="user" checked> <span>👤 User</span></label>
@@ -891,18 +894,37 @@
       e.preventDefault();
       
       const emailInput = document.getElementById('loginEmail');
+      const passwordInput = document.getElementById('loginPassword');
       const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
       const emailError = document.getElementById('emailError');
+      const passwordError = document.getElementById('passwordError');
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       
-      // Reset error
+      // Reset errors
       emailInput.classList.remove('error');
+      passwordInput.classList.remove('error');
       emailError.classList.remove('show');
+      passwordError.classList.remove('show');
+      
+      let isValid = true;
       
       // Validate email
       if (!emailRegex.test(email)) {
         emailInput.classList.add('error');
         emailError.classList.add('show');
+        isValid = false;
+      }
+      
+      // Validate password (non-empty)
+      if (password.length === 0) {
+        passwordInput.classList.add('error');
+        passwordError.classList.add('show');
+        isValid = false;
+      }
+      
+      // If either validation fails, stop here
+      if (!isValid) {
         return;
       }
       
