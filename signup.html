@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up · Stackly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --ink: #0A0F0D;
+      --pine: #122019;
+      --pine-soft: #18271F;
+      --line-green: #5C8A6B;
+      --signal-green: #6FE0A0;
+      --copper: #C97C3D;
+      --copper-bright: #E0A062;
+      --cream: #ECE7D8;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'IBM Plex Sans', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --radius: 20px;
+      --ease-out: cubic-bezier(0.16,1,0.3,1);
+    }
+    body {
+      background: var(--ink);
+      color: var(--cream);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Custom Scrollbar */
+    body::-webkit-scrollbar {
+      width: 6px;
+    }
+    body::-webkit-scrollbar-track {
+      background: var(--ink);
+    }
+    body::-webkit-scrollbar-thumb {
+      background: var(--copper);
+      border-radius: 3px;
+    }
+    body::-webkit-scrollbar-thumb:hover {
+      background: var(--copper-bright);
+    }
+
+    /* ===== HOLOGRAPHIC MOTHERBOARD BACKGROUND ===== */
+    .holographic-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      background: 
+        radial-gradient(ellipse at 50% 50%, rgba(18, 32, 25, 0.8), var(--ink) 85%);
+    }
+
+    .holo-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(111, 224, 160, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201, 124, 61, 0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridDrift 20s linear infinite;
+    }
+
+    @keyframes gridDrift {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    /* ===== 3D FLOATING MOTHERBOARD ===== */
+    .motherboard-3d {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) perspective(1200px) rotateX(12deg) rotateY(-5deg);
+      width: 650px;
+      height: 480px;
+      animation: motherboardHover 6s ease-in-out infinite;
+    }
+
+    @keyframes motherboardHover {
+      0%, 100% { transform: translate(-50%, -50%) perspective(1200px) rotateX(12deg) rotateY(-5deg) translateY(0); }
+      50% { transform: translate(-50%, -50%) perspective(1200px) rotateX(12deg) rotateY(-5deg) translateY(-20px); }
+    }
+
+    .mb-base {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      background: 
+        linear-gradient(135deg, rgba(18, 32, 25, 0.85), rgba(10, 15, 13, 0.9));
+      border: 1px solid rgba(111, 224, 160, 0.08);
+      box-shadow: 
+        0 0 80px rgba(111, 224, 160, 0.03),
+        inset 0 0 100px rgba(111, 224, 160, 0.02);
+    }
+
+    /* Holographic Glow Ring */
+    .holo-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 1px solid rgba(111, 224, 160, 0.06);
+      animation: ringPulse 4s ease-in-out infinite;
+    }
+
+    .holo-ring::before {
+      content: '';
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      border: 1px solid rgba(201, 124, 61, 0.04);
+      animation: ringPulse 5s ease-in-out infinite 0.5s;
+    }
+
+    .holo-ring::after {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      border: 1px solid rgba(111, 224, 160, 0.03);
+      animation: ringPulse 3.5s ease-in-out infinite 1s;
+    }
+
+    @keyframes ringPulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.3; }
+      50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.8; }
+    }
+
+    /* Projection Rings */
+    .projection-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid rgba(111, 224, 160, 0.04);
+      animation: ringRotate 12s linear infinite;
+    }
+
+    .projection-ring--1 {
+      width: 400px;
+      height: 400px;
+      border-color: rgba(111, 224, 160, 0.04);
+      animation-duration: 14s;
+    }
+
+    .projection-ring--2 {
+      width: 480px;
+      height: 480px;
+      border-color: rgba(201, 124, 61, 0.03);
+      animation-duration: 18s;
+      animation-direction: reverse;
+    }
+
+    .projection-ring--3 {
+      width: 540px;
+      height: 540px;
+      border-color: rgba(111, 224, 160, 0.02);
+      animation-duration: 22s;
+    }
+
+    @keyframes ringRotate {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* PCB Traces */
+    .holo-trace {
+      position: absolute;
+      background: linear-gradient(90deg, transparent, rgba(111, 224, 160, 0.12), rgba(201, 124, 61, 0.08), transparent);
+      height: 2px;
+      border-radius: 2px;
+      animation: traceGlow 5s ease-in-out infinite;
+    }
+
+    .holo-trace--1 { top: 20%; left: 8%; width: 30%; animation-delay: 0s; }
+    .holo-trace--2 { top: 35%; left: 5%; width: 20%; animation-delay: 0.6s; }
+    .holo-trace--3 { top: 50%; left: 45%; width: 28%; animation-delay: 1.2s; }
+    .holo-trace--4 { top: 65%; left: 10%; width: 35%; animation-delay: 1.8s; }
+    .holo-trace--5 { top: 80%; left: 35%; width: 22%; animation-delay: 2.4s; }
+
+    .holo-trace--v {
+      width: 2px;
+      height: 100px;
+      background: linear-gradient(180deg, transparent, rgba(111, 224, 160, 0.10), rgba(201, 124, 61, 0.06), transparent);
+    }
+    .holo-trace--v1 { top: 15%; left: 25%; animation-delay: 0.3s; }
+    .holo-trace--v2 { top: 25%; left: 55%; animation-delay: 0.9s; }
+    .holo-trace--v3 { top: 50%; left: 20%; animation-delay: 1.5s; }
+    .holo-trace--v4 { top: 45%; left: 70%; animation-delay: 2.1s; }
+
+    @keyframes traceGlow {
+      0%, 100% { opacity: 0.2; transform: scaleX(0.9); }
+      50% { opacity: 0.8; transform: scaleX(1); }
+    }
+
+    /* ===== ROTATING CHIP CORES ===== */
+    .chip-core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70px;
+      height: 70px;
+    }
+
+    .chip-core__outer {
+      position: absolute;
+      inset: 0;
+      border-radius: 6px;
+      border: 1px solid rgba(111, 224, 160, 0.15);
+      background: radial-gradient(circle at 50% 50%, rgba(111, 224, 160, 0.08), transparent 70%);
+      animation: coreRotate 8s linear infinite;
+      box-shadow: 0 0 40px rgba(111, 224, 160, 0.05);
+    }
+
+    .chip-core__inner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 45px;
+      height: 45px;
+      border-radius: 4px;
+      border: 1px solid rgba(201, 124, 61, 0.10);
+      background: radial-gradient(circle at 50% 50%, rgba(201, 124, 61, 0.06), transparent 70%);
+      animation: coreRotate 6s linear infinite reverse;
+    }
+
+    .chip-core__center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 25px;
+      height: 25px;
+      border-radius: 2px;
+      background: radial-gradient(circle at 50% 50%, rgba(111, 224, 160, 0.15), rgba(201, 124, 61, 0.05));
+      animation: corePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes coreRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes corePulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+    }
+
+    .chip-pins {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 85px;
+      height: 85px;
+    }
+    .chip-pins span {
+      position: absolute;
+      width: 2px;
+      height: 7px;
+      background: rgba(111, 224, 160, 0.06);
+      border-radius: 1px;
+    }
+    .chip-pins span:nth-child(1) { top: -12px; left: 15px; }
+    .chip-pins span:nth-child(2) { top: -12px; left: 35px; }
+    .chip-pins span:nth-child(3) { top: -12px; left: 55px; }
+    .chip-pins span:nth-child(4) { bottom: -12px; left: 15px; }
+    .chip-pins span:nth-child(5) { bottom: -12px; left: 35px; }
+    .chip-pins span:nth-child(6) { bottom: -12px; left: 55px; }
+    .chip-pins span:nth-child(7) { left: -12px; top: 15px; height: 2px; width: 7px; }
+    .chip-pins span:nth-child(8) { left: -12px; top: 35px; height: 2px; width: 7px; }
+    .chip-pins span:nth-child(9) { left: -12px; top: 55px; height: 2px; width: 7px; }
+    .chip-pins span:nth-child(10) { right: -12px; top: 15px; height: 2px; width: 7px; }
+    .chip-pins span:nth-child(11) { right: -12px; top: 35px; height: 2px; width: 7px; }
+    .chip-pins span:nth-child(12) { right: -12px; top: 55px; height: 2px; width: 7px; }
+
+    /* ===== GLOWING COMPONENTS ===== */
+    .glow-component {
+      position: absolute;
+      opacity: 0.06;
+      animation: componentFloat 8s ease-in-out infinite;
+    }
+
+    .ic-glow {
+      width: 35px;
+      height: 35px;
+      border: 1px solid rgba(111, 224, 160, 0.06);
+      border-radius: 3px;
+      background: rgba(111, 224, 160, 0.02);
+      box-shadow: 0 0 20px rgba(111, 224, 160, 0.02);
+    }
+    .ic-glow--1 { top: 18%; left: 12%; animation-delay: 0s; }
+    .ic-glow--2 { top: 55%; right: 10%; animation-delay: 1.5s; }
+    .ic-glow--3 { bottom: 12%; left: 25%; animation-delay: 3s; }
+
+    .ic-glow::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 18px;
+      height: 18px;
+      border: 1px solid rgba(201, 124, 61, 0.04);
+      border-radius: 1px;
+    }
+
+    .res-glow {
+      width: 20px;
+      height: 6px;
+      border-radius: 1px;
+      background: rgba(201, 124, 61, 0.04);
+      border: 1px solid rgba(201, 124, 61, 0.03);
+      box-shadow: 0 0 15px rgba(201, 124, 61, 0.02);
+    }
+    .res-glow--1 { top: 28%; left: 40%; animation-delay: 0.5s; }
+    .res-glow--2 { top: 68%; left: 30%; animation-delay: 2s; }
+    .res-glow--3 { top: 38%; right: 22%; animation-delay: 3.5s; }
+
+    .cap-glow {
+      width: 7px;
+      height: 11px;
+      border-radius: 1px;
+      background: rgba(111, 224, 160, 0.03);
+      border: 1px solid rgba(111, 224, 160, 0.02);
+      box-shadow: 0 0 15px rgba(111, 224, 160, 0.02);
+    }
+    .cap-glow--1 { top: 22%; left: 60%; animation-delay: 1s; }
+    .cap-glow--2 { top: 50%; left: 8%; animation-delay: 2.5s; }
+    .cap-glow--3 { bottom: 18%; right: 22%; animation-delay: 4s; }
+
+    @keyframes componentFloat {
+      0%, 100% { transform: translateY(0); opacity: 0.04; }
+      50% { transform: translateY(-8px); opacity: 0.12; }
+    }
+
+    /* ===== FLOATING PARTICLES ===== */
+    .holo-particle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(111, 224, 160, 0.3), transparent 70%);
+      animation: particleDrift 10s ease-in-out infinite;
+    }
+    .holo-particle--1 { width: 4px; height: 4px; top: 15%; left: 5%; animation-delay: 0s; }
+    .holo-particle--2 { width: 3px; height: 3px; top: 30%; right: 8%; animation-delay: 0.8s; }
+    .holo-particle--3 { width: 5px; height: 5px; bottom: 25%; left: 3%; animation-delay: 1.6s; }
+    .holo-particle--4 { width: 3px; height: 3px; top: 60%; right: 5%; animation-delay: 2.4s; }
+    .holo-particle--5 { width: 4px; height: 4px; top: 45%; left: 12%; animation-delay: 0.4s; }
+    .holo-particle--6 { width: 3px; height: 3px; bottom: 15%; right: 10%; animation-delay: 1.2s; }
+
+    @keyframes particleDrift {
+      0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.1; }
+      25% { transform: translate(30px, -20px) scale(1.5); opacity: 0.5; }
+      50% { transform: translate(-10px, -30px) scale(0.8); opacity: 0.2; }
+      75% { transform: translate(20px, -10px) scale(1.2); opacity: 0.4; }
+    }
+
+    /* ===== GLOW ORBS ===== */
+    .glow-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: 0;
+      pointer-events: none;
+      animation: orbFloat 15s ease-in-out infinite;
+    }
+
+    .glow-orb--1 {
+      width: 400px;
+      height: 400px;
+      top: -150px;
+      left: -150px;
+      background: radial-gradient(circle, rgba(201, 124, 61, 0.03), transparent 70%);
+      animation-delay: 0s;
+    }
+
+    .glow-orb--2 {
+      width: 350px;
+      height: 350px;
+      bottom: -120px;
+      right: -120px;
+      background: radial-gradient(circle, rgba(111, 224, 160, 0.03), transparent 70%);
+      animation-delay: 7s;
+    }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-40px, 30px) scale(1.1); }
+    }
+
+    /* ===== SIGNUP CARD ===== */
+    .signup-card {
+      position: relative;
+      z-index: 1;
+      background: rgba(18, 32, 25, 0.85);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid rgba(111, 224, 160, 0.08);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 
+        0 30px 80px -20px rgba(0, 0, 0, 0.9),
+        0 0 80px rgba(111, 224, 160, 0.02),
+        inset 0 1px 0 rgba(111, 224, 160, 0.03);
+      animation: cardSlideUp 0.8s var(--ease-out);
+      overflow: hidden;
+    }
+
+    .signup-card::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 22px;
+      padding: 2px;
+      background: conic-gradient(
+        from 0deg,
+        rgba(111, 224, 160, 0.15),
+        rgba(201, 124, 61, 0.10),
+        rgba(111, 224, 160, 0.15),
+        rgba(201, 124, 61, 0.10),
+        rgba(111, 224, 160, 0.15)
+      );
+      -webkit-mask-: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: borderRotate 12s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes borderRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes cardSlideUp {
+      from { opacity: 0; transform: translateY(40px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .signup-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .logo img {
+      height: 40px;
+      width: auto;
+      filter: drop-shadow(0 0 30px rgba(111, 224, 160, 0.08));
+    }
+
+    .sub {
+      color: var(--line-green);
+      font-size: 0.85rem;
+      margin-bottom: 1.8rem;
+      border-left: 2px solid var(--copper);
+      padding-left: 0.8rem;
+      opacity: 0.8;
+      font-family: var(--font-mono);
+      letter-spacing: 0.02em;
+    }
+
+    .sub .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal-green);
+      margin-right: 0.5rem;
+      animation: dotPulse 2s ease-in-out infinite;
+      box-shadow: 0 0 20px rgba(111, 224, 160, 0.2);
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.2; transform: scale(0.6); }
+    }
+
+    .welcome-text {
+      font-size: 0.75rem;
+      color: var(--line-green);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+      opacity: 0.7;
+    }
+
+    .welcome-text strong {
+      color: var(--copper);
+      opacity: 1;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--line-green);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      background: rgba(10, 15, 13, 0.5);
+      border: 1px solid rgba(111, 224, 160, 0.08);
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      transition: all 0.4s ease;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: var(--signal-green);
+      box-shadow: 0 0 40px rgba(111, 224, 160, 0.05), 0 0 80px rgba(111, 224, 160, 0.02);
+      background: rgba(10, 15, 13, 0.6);
+    }
+
+    .form-group input::placeholder {
+      color: rgba(236, 231, 216, 0.1);
+    }
+
+    .form-group input.error {
+      border-color: #E06A6A;
+      box-shadow: 0 0 30px rgba(224, 106, 106, 0.1);
+    }
+
+    .form-group .error-message {
+      display: none;
+      font-size: 0.65rem;
+      color: #E06A6A;
+      font-family: var(--font-mono);
+      margin-top: 0.3rem;
+      letter-spacing: 0.02em;
+    }
+
+    .form-group .error-message.show {
+      display: block;
+    }
+
+    .password-hint {
+      font-size: 0.65rem;
+      color: var(--line-green);
+      opacity: 0.35;
+      margin-top: 0.3rem;
+      font-family: var(--font-mono);
+      letter-spacing: 0.02em;
+    }
+
+    .role-selector {
+      display: flex;
+      gap: 1.5rem;
+      margin: 0.8rem 0 1.2rem;
+    }
+
+    .role-selector label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--line-green);
+      transition: color 0.3s;
+      font-family: var(--font-mono);
+      letter-spacing: 0.02em;
+    }
+
+    .role-selector label:hover {
+      color: var(--cream);
+    }
+
+    .role-selector input[type="radio"] {
+      accent-color: var(--copper);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--copper);
+      color: var(--ink);
+      border: none;
+      padding: 0.85rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.8rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.08), transparent, rgba(255, 255, 255, 0.08), transparent);
+      animation: rotateBtn 12s linear infinite;
+    }
+
+    @keyframes rotateBtn {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .btn-primary span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-primary:hover {
+      background: var(--copper-bright);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 50px -8px rgba(201, 124, 61, 0.3);
+    }
+
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 14px;
+      background: var(--copper);
+      z-index: -1;
+      animation: btnPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes btnPulse {
+      0%, 100% { opacity: 0.15; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.04); }
+    }
+
+    .form-footer {
+      margin-top: 1.2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--line-green);
+      font-family: var(--font-mono);
+      letter-spacing: 0.02em;
+    }
+
+    .form-footer a {
+      color: var(--copper);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .form-footer a:hover {
+      color: var(--copper-bright);
+      text-decoration: underline;
+    }
+
+    .login-link {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--line-green);
+    }
+
+    .login-link a {
+      color: var(--copper);
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .login-link a:hover {
+      color: var(--copper-bright);
+      text-decoration: underline;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--line-green);
+      text-decoration: none;
+      transition: color 0.3s;
+      letter-spacing: 0.04em;
+    }
+
+    .back-link:hover {
+      color: var(--copper);
+    }
+
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--line-green);
+      opacity: 0.35;
+      letter-spacing: 0.04em;
+    }
+
+    .secure-badge svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--line-green);
+      opacity: 0.5;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 1rem; }
+      .signup-card { padding: 1.8rem 1.2rem; }
+      .motherboard-3d { width: 350px; height: 280px; }
+      .chip-core { width: 50px; height: 50px; }
+      .chip-core__inner { width: 32px; height: 32px; }
+      .chip-core__center { width: 18px; height: 18px; }
+      .chip-pins { width: 60px; height: 60px; }
+      .holo-ring { width: 180px; height: 180px; }
+      .projection-ring--1 { width: 240px; height: 240px; }
+      .projection-ring--2 { width: 290px; height: 290px; }
+      .projection-ring--3 { width: 330px; height: 330px; }
+      .holo-trace { display: none; }
+      .holo-trace--v { display: none; }
+      .glow-component { display: none; }
+      .holo-particle { display: none; }
+      .glow-orb--1, .glow-orb--2 { width: 200px; height: 200px; }
+      .logo { font-size: 1.2rem; }
+      .role-selector { gap: 1rem; flex-wrap: wrap; }
+    }
+
+    @media (max-width: 768px) {
+      .motherboard-3d { width: 450px; height: 350px; }
+      .chip-core { width: 60px; height: 60px; }
+      .chip-core__inner { width: 38px; height: 38px; }
+      .chip-core__center { width: 22px; height: 22px; }
+      .holo-ring { width: 220px; height: 220px; }
+      .projection-ring--1 { width: 280px; height: 280px; }
+      .projection-ring--2 { width: 340px; height: 340px; }
+      .projection-ring--3 { width: 390px; height: 390px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HOLOGRAPHIC MOTHERBOARD BACKGROUND ===== -->
+  <div class="holographic-bg" aria-hidden="true">
+    <div class="holo-grid"></div>
+
+    <div class="motherboard-3d">
+      <div class="mb-base"></div>
+
+      <div class="holo-ring"></div>
+
+      <div class="projection-ring projection-ring--1"></div>
+      <div class="projection-ring projection-ring--2"></div>
+      <div class="projection-ring projection-ring--3"></div>
+
+      <div class="holo-trace holo-trace--1"></div>
+      <div class="holo-trace holo-trace--2"></div>
+      <div class="holo-trace holo-trace--3"></div>
+      <div class="holo-trace holo-trace--4"></div>
+      <div class="holo-trace holo-trace--5"></div>
+      <div class="holo-trace holo-trace--v holo-trace--v1"></div>
+      <div class="holo-trace holo-trace--v holo-trace--v2"></div>
+      <div class="holo-trace holo-trace--v holo-trace--v3"></div>
+      <div class="holo-trace holo-trace--v holo-trace--v4"></div>
+
+      <div class="chip-core">
+        <div class="chip-core__outer"></div>
+        <div class="chip-core__inner"></div>
+        <div class="chip-core__center"></div>
+        <div class="chip-pins">
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="glow-component ic-glow ic-glow--1"></div>
+      <div class="glow-component ic-glow ic-glow--2"></div>
+      <div class="glow-component ic-glow ic-glow--3"></div>
+      <div class="glow-component res-glow res-glow--1"></div>
+      <div class="glow-component res-glow res-glow--2"></div>
+      <div class="glow-component res-glow res-glow--3"></div>
+      <div class="glow-component cap-glow cap-glow--1"></div>
+      <div class="glow-component cap-glow cap-glow--2"></div>
+      <div class="glow-component cap-glow cap-glow--3"></div>
+
+      <div class="holo-particle holo-particle--1"></div>
+      <div class="holo-particle holo-particle--2"></div>
+      <div class="holo-particle holo-particle--3"></div>
+      <div class="holo-particle holo-particle--4"></div>
+      <div class="holo-particle holo-particle--5"></div>
+      <div class="holo-particle holo-particle--6"></div>
+    </div>
+  </div>
+
+  <!-- Glow Orbs -->
+  <div class="glow-orb glow-orb--1"></div>
+  <div class="glow-orb glow-orb--2"></div>
+
+  <!-- ===== SIGNUP CARD ===== -->
+  <div class="signup-card">
+    <div class="logo">
+      <img src="logo.webp" alt="Stackly Logo">
+    </div>
+    <p class="sub"><span class="status-dot"></span>Secure · Electronics Manufacturing</p>
+
+    <div class="welcome-text">
+      Join <strong>Stackly</strong> and get access to real-time production tracking, DFM reviews, and instant quotes.
+    </div>
+
+    <form id="signupForm" novalidate>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="signupName" placeholder="Jane Doe" required>
+        <div class="error-message" id="nameError">Please enter your full name</div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="signupEmail" placeholder="you@company.com" required>
+        <div class="error-message" id="emailError">Please enter a valid email address (e.g., name@domain.com)</div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signupPassword" placeholder="••••••••" required>
+        <div class="password-hint">Min 8 characters · At least 1 number</div>
+        <div class="error-message" id="passwordError">Password must be at least 8 characters</div>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" id="signupConfirm" placeholder="••••••••" required>
+        <div class="error-message" id="confirmError">Passwords do not match</div>
+      </div>
+      <div class="role-selector">
+        <label><input type="radio" name="signupRole" value="user" checked> <span>👤 User</span></label>
+        <label><input type="radio" name="signupRole" value="admin"> <span>⚙️ Admin</span></label>
+      </div>
+      <button type="submit" class="btn-primary"><span>🚀 Create Account</span></button>
+      <div class="form-footer">By signing up you agree to our <a href="404.html">Terms of Service</a> &amp; <a href="404.html">Privacy Policy</a>.</div>
+    </form>
+
+    <div class="login-link">Already have an account? <a href="login.html">Log in here</a></div>
+    <a href="index.html" class="back-link">← Back to home</a>
+
+    <div class="secure-badge">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      <span>256-bit encrypted · ISO 13485 compliant</span>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      let isValid = true;
+      
+      // Get elements
+      const nameInput = document.getElementById('signupName');
+      const emailInput = document.getElementById('signupEmail');
+      const passwordInput = document.getElementById('signupPassword');
+      const confirmInput = document.getElementById('signupConfirm');
+      
+      const nameError = document.getElementById('nameError');
+      const emailError = document.getElementById('emailError');
+      const passwordError = document.getElementById('passwordError');
+      const confirmError = document.getElementById('confirmError');
+      
+      // Reset errors
+      [nameInput, emailInput, passwordInput, confirmInput].forEach(el => el.classList.remove('error'));
+      [nameError, emailError, passwordError, confirmError].forEach(el => el.classList.remove('show'));
+      
+      // Validate name
+      if (nameInput.value.trim() === '') {
+        nameInput.classList.add('error');
+        nameError.classList.add('show');
+        isValid = false;
+      }
+      
+      // Validate email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailInput.value.trim())) {
+        emailInput.classList.add('error');
+        emailError.classList.add('show');
+        isValid = false;
+      }
+      
+      // Validate password
+      if (passwordInput.value.length < 8) {
+        passwordInput.classList.add('error');
+        passwordError.classList.add('show');
+        isValid = false;
+      }
+      
+      // Validate confirm password
+      if (passwordInput.value !== confirmInput.value || confirmInput.value === '') {
+        confirmInput.classList.add('error');
+        confirmError.classList.add('show');
+        isValid = false;
+      }
+      
+      if (!isValid) {
+        return;
+      }
+
+      // If valid, proceed with signup
+      const name = nameInput.value;
+      const email = emailInput.value.trim();
+      localStorage.setItem('stacklyUserName', name);
+      localStorage.setItem('stacklyUserEmail', email);
+
+      const role = document.querySelector('input[name="signupRole"]:checked').value;
+      localStorage.setItem('stacklyUserRole', role);
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>

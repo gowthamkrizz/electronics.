@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — Stackly Mfg.</title>
+<meta name="description" content="Browse PCB assembly and electromechanical builds across medical, industrial, aerospace, and consumer electronics programs.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header-footer.css">
+<link rel="stylesheet" href="../css/inner-pages.css">
+<link rel="stylesheet" href="../css/home.css">
+<link rel="stylesheet" href="../css/projects.css">
+
+<!-- Additional inline styles for PCB counter animation -->
+<style>
+/* Override stats section with PCB animation */
+.stats {
+  position: relative;
+  overflow: hidden;
+  background: #0d131c;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+/* PCB trace canvas overlay */
+.pcb-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.3;
+}
+
+.pcb-canvas-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Pulse dots - electric sparks */
+.pulse-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 24px var(--accent), 0 0 48px var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+  transition: opacity 0.1s;
+}
+
+/* Ensure stats grid stays above canvas */
+.stats-grid {
+  position: relative;
+  z-index: 2;
+}
+
+/* Stats items with glass effect */
+.stat-item {
+  background: rgba(20, 30, 42, 0.6);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 12px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.stat-item strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.stat-item span {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+@media (max-width: 800px) {
+  .stat-item strong { font-size: 2.2rem; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="vh">Skip to content</a>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a href="../index.html" class="brand">
+      <img src="../logo.webp" alt="Stackly Logo" class="logo-img">
+    </a>
+    <nav class="nav-main">
+      <span class="nav-indicator" aria-hidden="true"></span>
+      <a href="../index.html" data-nav="index.html">Home</a>
+      <a href="about.html" data-nav="about.html">About Us</a>
+      <a href="services.html" data-nav="services.html">Services</a>
+      <a href="projects.html" data-nav="projects.html" class="is-active">Projects</a>
+      <a href="blog.html" data-nav="blog.html">Blog</a>
+      <a href="contact.html" data-nav="contact.html">Contact</a>
+      <a href="../login.html" class="mobile-login-btn">Login / Sign Up</a>
+    </nav>
+    <div class="header-cta">
+      <a href="../login.html" class="btn btn--ghost btn--login">Login / Sign Up</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- 1. ENHANCED PAGE BANNER / HERO -->
+  <section class="page-banner page-banner--projects">
+    <div class="page-banner__bg">
+      <img src="../images/14.webp" alt="Assembled industrial control boards">
+    </div>
+    
+    <!-- Animated particles -->
+    <div class="page-banner__particles" aria-hidden="true">
+      <span class="particle" style="top:15%;left:10%;animation-delay:0s;"></span>
+      <span class="particle" style="top:25%;left:85%;animation-delay:1.2s;"></span>
+      <span class="particle" style="top:65%;left:5%;animation-delay:2.5s;"></span>
+      <span class="particle" style="top:75%;left:90%;animation-delay:0.8s;"></span>
+      <span class="particle" style="top:45%;left:50%;animation-delay:1.8s;"></span>
+      <span class="particle" style="top:10%;left:45%;animation-delay:3.2s;"></span>
+      <span class="particle" style="top:85%;left:35%;animation-delay:0.4s;"></span>
+      <span class="particle" style="top:50%;left:20%;animation-delay:2.1s;"></span>
+    </div>
+
+    <!-- Decorative floating shapes -->
+    <div class="page-banner__floaters" aria-hidden="true">
+      <svg class="floater floater--1" viewBox="0 0 32 32" fill="none">
+        <path d="M16 3L29 10L16 17L3 10L16 3Z" fill="#C97C3D"/>
+        <path d="M3 16L16 23L29 16" stroke="#6FE0A0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M3 22.5L16 29.5L29 22.5" stroke="#6FE0A0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+      </svg>
+      <svg class="floater floater--2" viewBox="0 0 24 24" fill="none" stroke="#6FE0A0" stroke-width="1.4">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8" cy="8" r="1.4" fill="#6FE0A0" stroke="none"/>
+      </svg>
+      <svg class="floater floater--3" viewBox="0 0 24 24" fill="none" stroke="#C97C3D" stroke-width="1.4">
+        <path d="M4 17l4-10 4 8 3-5 5 7"/>
+      </svg>
+    </div>
+
+    <div class="page-banner__inner">
+      <nav class="breadcrumb"><a href="../index.html">Home</a> <span>/</span> Projects</nav>
+      
+      <!-- Hero badge -->
+      <div class="page-banner__badge">
+        <span class="badge-dot"></span>
+        640+ Programs Delivered
+      </div>
+      
+      <h1>Builds across medical, industrial, and aerospace.</h1>
+      <p class="page-banner__lede">A selection of programs we can talk about publicly — most of what we build is covered by NDA.</p>
+      
+      <!-- Enhanced stats strip -->
+      <div class="page-banner__stats">
+        <div class="stat-item">
+          <strong>640+</strong>
+          <span>Programs Delivered</span>
+        </div>
+        <div class="stat-item">
+          <strong>18+</strong>
+          <span>Years Building</span>
+        </div>
+        <div class="stat-item">
+          <strong>99.4%</strong>
+          <span>First-Pass Yield</span>
+        </div>
+        <div class="stat-item">
+          <strong>4</strong>
+          <span>SMT Lines</span>
+        </div>
+      </div>
+
+      <div class="page-banner__actions">
+        <a href="../404.html" class="btn btn--primary btn--pulse">Request a Quote</a>
+        <a href="../404.html" class="btn btn--ghost">Browse Projects</a>
+      </div>
+    </div>
+
+    <div class="scroll-cue"><span class="scroll-cue__mouse"><span class="scroll-cue__dot"></span></span>Scroll</div>
+  </section>
+
+  <!-- 2. FEATURED PROJECT -->
+  <section class="section">
+    <div class="container">
+      <div class="featured-project reveal-up">
+        <div class="featured-project__media">
+          <img src="../images/5.webp" alt="Patient monitor mainboard assembly">
+        </div>
+        <div class="featured-project__body">
+          <span class="eyebrow">Featured — Medical Device</span>
+          <h2 style="font-size:clamp(1.6rem,3vw,2.1rem)">Patient Monitor Mainboard</h2>
+          <p>A six-layer mainboard for a bedside patient monitor, built under ISO 13485 with full lot traceability and 100% functional test coverage.</p>
+          <div class="featured-project__specs">
+            <div><strong>6-Layer</strong><span>Board Stack</span></div>
+            <div><strong>340</strong><span>Components</span></div>
+            <div><strong>100%</strong><span>Functional Test</span></div>
+          </div>
+          <a href="../404.html" class="btn btn--primary" style="width:fit-content">View Full Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. FILTER + PROJECT GRID -->
+  <section class="section section--pine" id="all-projects">
+    <div class="container">
+      <div class="section-head reveal-up">
+        <span class="eyebrow">All Projects</span>
+        <h2>Browse by industry</h2>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-pill is-active" data-filter="all">All</button>
+        <button class="filter-pill" data-filter="medical">Medical</button>
+        <button class="filter-pill" data-filter="industrial">Industrial</button>
+        <button class="filter-pill" data-filter="aerospace">Aerospace</button>
+        <button class="filter-pill" data-filter="consumer">Consumer</button>
+      </div>
+      <div class="portfolio-grid reveal-stagger">
+        <a href="../404.html" class="portfolio-card" data-cat="medical">
+          <img src="../images/5.webp" alt="Patient monitor mainboard">
+          <div class="portfolio-card__overlay"><span class="portfolio-card__tag">Medical</span><h4>Patient Monitor Mainboard</h4><span class="portfolio-card__btn">View Project</span></div>
+        </a>
+        <a href="../404.html" class="portfolio-card" data-cat="industrial">
+          <img src="../images/3.webp" alt="Conveyor control module">
+          <div class="portfolio-card__overlay"><span class="portfolio-card__tag">Industrial</span><h4>Conveyor Control Module</h4><span class="portfolio-card__btn">View Project</span></div>
+        </a>
+        <a href="../404.html" class="portfolio-card" data-cat="aerospace">
+          <img src="../images/4.webp" alt="Avionics sensor interface board">
+          <div class="portfolio-card__overlay"><span class="portfolio-card__tag">Aerospace</span><h4>Avionics Sensor Interface</h4><span class="portfolio-card__btn">View Project</span></div>
+        </a>
+        <a href="../404.html" class="portfolio-card" data-cat="consumer">
+          <img src="../images/6.webp" alt="Consumer wearable assembly">
+          <div class="portfolio-card__overlay"><span class="portfolio-card__tag">Consumer</span><h4>Wearable Fitness Tracker</h4><span class="portfolio-card__btn">View Project</span></div>
+        </a>
+        <a href="../404.html" class="portfolio-card" data-cat="medical">
+          <img src="../images/7.webp" alt="Infusion pump controller board">
+          <div class="portfolio-card__overlay"><span class="portfolio-card__tag">Medical</span><h4>Infusion Pump Controller</h4><span class="portfolio-card__btn">View Project</span></div>
+        </a>
+        <a href="../404.html" class="portfolio-card" data-cat="industrial">
+          <img src="../images/9.webp" alt="Power distribution unit board">
+          <div class="portfolio-card__overlay"><span class="portfolio-card__tag">Industrial</span><h4>Power Distribution Unit</h4><span class="portfolio-card__btn">View Project</span></div>
+        </a>
+      </div>
+      <div class="pagination">
+        <span class="is-active">1</span>
+        <a href="../404.html">2</a>
+        <a href="../404.html">3</a>
+        <a href="../404.html">→</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. CAPABILITY CALLOUT -->
+  <section class="section">
+    <div class="container about__grid">
+      <div class="reveal-left">
+        <span class="eyebrow">Why Clients Stay</span>
+        <h2>Most of these programs started as a single prototype run</h2>
+        <p class="lede" style="margin-top:1rem">A handful of boards to validate a design, then a production ramp once the revision was locked. We price and staff for that path from the first quote.</p>
+        <a href="../404.html" class="btn btn--ghost" style="margin-top:1.6rem">See Our Process</a>
+      </div>
+      <div class="about__media reveal-right">
+        <img src="../images/12.webp" alt="Engineer reviewing a prototype board">
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. CLIENT LOGOS -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head reveal-up" style="margin-bottom:2rem">
+        <span class="eyebrow">Trusted By</span>
+        <h3 style="margin-top:0.6rem">Engineering teams at</h3>
+      </div>
+      <div class="logo-strip reveal-up">
+        <span>VERIDIAN HEALTH</span>
+        <span>FERROTYPE IND.</span>
+        <span>ALTUS AEROSPACE</span>
+        <span>NORTHBEAM</span>
+        <span>HALCYON MEDICAL</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. PROCESS RECAP -->
+  <section class="section process">
+    <div class="container">
+      <div class="section-head reveal-up">
+        <span class="eyebrow">Every Project Follows This</span>
+        <h2>From file drop to finished unit</h2>
+      </div>
+      <div class="process-track reveal-stagger">
+        <div class="process-step"><div class="process-step__node">01</div><h4>DFM Review</h4><p>Gerbers and BOM checked before kitting begins.</p></div>
+        <div class="process-step"><div class="process-step__node">02</div><h4>Kitting</h4><p>Components pulled and lot-tracked.</p></div>
+        <div class="process-step"><div class="process-step__node">03</div><h4>SMT &amp; Reflow</h4><p>Placement and soldering to a logged profile.</p></div>
+        <div class="process-step"><div class="process-step__node">04</div><h4>Inspection</h4><p>AOI, X-ray, and functional test.</p></div>
+        <div class="process-step"><div class="process-step__node">05</div><h4>Ship</h4><p>Traceable serials, packed to spec.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. STATS STRIP - UPDATED WITH PCB ANIMATION ============ -->
+  <section class="section stats" id="stats">
+    <div class="container">
+      <div class="stats-grid reveal-stagger">
+        <div class="stat-item">
+          <strong><span class="counter-num" data-target="500">0</span><span>+</span></strong>
+          <span>Products Manufactured</span>
+        </div>
+        <div class="stat-item">
+          <strong><span class="counter-num" data-target="120">0</span><span>+</span></strong>
+          <span>Global Clients</span>
+        </div>
+        <div class="stat-item">
+          <strong><span class="counter-num" data-target="50">0</span><span>M+</span></strong>
+          <span>Components Produced</span>
+        </div>
+        <div class="stat-item">
+          <strong><span class="counter-num" data-target="99.4" data-decimals="1">0</span><span>%</span></strong>
+          <span>First-Pass Yield</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PCB Trace Canvas Overlay -->
+    <div class="pcb-canvas-wrap" id="pcbCanvas">
+      <svg viewBox="0 0 1200 300" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <g stroke="#6FE0A0" stroke-width="3" fill="none" filter="url(#glow)">
+          <!-- PCB traces that will light up left→right -->
+          <path d="M 40 60 L 1160 60" stroke-dasharray="0 1200" stroke-dashoffset="0" class="trace-line" data-index="0"/>
+          <path d="M 40 120 L 1160 120" stroke-dasharray="0 1200" stroke-dashoffset="0" class="trace-line" data-index="1"/>
+          <path d="M 40 180 L 1160 180" stroke-dasharray="0 1200" stroke-dashoffset="0" class="trace-line" data-index="2"/>
+          <path d="M 40 240 L 1160 240" stroke-dasharray="0 1200" stroke-dashoffset="0" class="trace-line" data-index="3"/>
+        </g>
+        <!-- Vias / pads -->
+        <circle cx="120" cy="60" r="5" fill="#C97C3D" opacity="0.4" />
+        <circle cx="340" cy="120" r="5" fill="#C97C3D" opacity="0.4" />
+        <circle cx="560" cy="180" r="5" fill="#C97C3D" opacity="0.4" />
+        <circle cx="780" cy="240" r="5" fill="#C97C3D" opacity="0.4" />
+        <circle cx="980" cy="60" r="5" fill="#C97C3D" opacity="0.4" />
+        <circle cx="220" cy="240" r="5" fill="#C97C3D" opacity="0.4" />
+        <circle cx="880" cy="120" r="5" fill="#C97C3D" opacity="0.4" />
+      </svg>
+    </div>
+
+    <!-- Electric pulse dots -->
+    <div class="pulse-dot" id="pulse1" style="top:15%; left:6%;"></div>
+    <div class="pulse-dot" id="pulse2" style="top:35%; left:22%;"></div>
+    <div class="pulse-dot" id="pulse3" style="top:55%; left:48%;"></div>
+    <div class="pulse-dot" id="pulse4" style="top:75%; left:70%;"></div>
+    <div class="pulse-dot" id="pulse5" style="top:25%; left:88%;"></div>
+  </section>
+
+  <!-- 8. CTA -->
+  <section class="section cta">
+    <span class="cta__shape cta__shape--1"></span>
+    <span class="cta__shape cta__shape--2"></span>
+    <div class="container cta__inner reveal-up">
+      <span class="eyebrow" style="justify-content:center;">Your Build, Next</span>
+      <h2>Have a board that needs to ship right?</h2>
+      <p>Send the design over and we'll tell you what it takes to build it well.</p>
+      <div class="cta__actions">
+        <a href="../404.html" class="btn btn--primary btn--pulse">Request a Quote</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-top">
+    <div class="footer-brand">
+      <a href="../index.html" class="brand">
+        <img src="../logo.webp" alt="Stackly Logo" class="logo-img">
+      </a>
+      <p>Contract electronics manufacturing for medical, industrial, and aerospace OEMs. Prototype to volume, under one roof.</p>
+      <div class="footer-social">
+        <a href="../404.html" aria-label="LinkedIn">in</a>
+        <a href="../404.html" aria-label="X / Twitter">𝕏</a>
+        <a href="../404.html" aria-label="YouTube">▶</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Capabilities</h4>
+      <ul>
+        <li><a href="../404.html">SMT Assembly</a></li>
+        <li><a href="../404.html">Box Build</a></li>
+        <li><a href="../404.html">Functional Test</a></li>
+        <li><a href="../404.html">DFM Review</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Visit</h4>
+      <ul>
+        <li>MMR Complex, Near Chinna Thirupathi<br>Salem, Tamil Nadu 636008</li>
+        <li><a href="../404.html">+1 (517) 555-0148</a></li>
+        <li><a href="../404.html">hello@stackly.example</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© 2026 Stackly Manufacturing Co.</span>
+    <span><a href="../404.html">Privacy Policy</a> · <a href="../404.html">Terms of Service</a></span>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+<script>
+  document.querySelectorAll('.filter-bar .filter-pill').forEach(function(pill){
+    pill.addEventListener('click', function(){
+      document.querySelectorAll('.filter-bar .filter-pill').forEach(function(p){p.classList.remove('is-active');});
+      pill.classList.add('is-active');
+      var f = pill.getAttribute('data-filter');
+      document.querySelectorAll('.portfolio-card').forEach(function(card){
+        var show = (f === 'all' || card.getAttribute('data-cat') === f);
+        card.style.display = show ? '' : 'none';
+      });
+    });
+  });
+
+  // Custom script for PCB counter animation
+  (function() {
+    "use strict";
+
+    const statNumbers = document.querySelectorAll('.counter-num');
+    const traceLines = document.querySelectorAll('.trace-line');
+    const pulseDots = document.querySelectorAll('.pulse-dot');
+    
+    let animationStarted = false;
+    let countersInited = false;
+
+    // Animate number counting
+    function animateNumber(el, target, decimals = 0) {
+      let current = 0;
+      const step = Math.max(1, Math.floor(target / 60));
+      const interval = 20;
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        el.textContent = current.toFixed(decimals);
+      }, interval);
+    }
+
+    function startStatsAnimation() {
+      if (countersInited) return;
+      countersInited = true;
+
+      // 1) Count numbers
+      statNumbers.forEach(el => {
+        const raw = el.getAttribute('data-target');
+        const target = parseFloat(raw);
+        if (isNaN(target)) return;
+        const decimals = el.hasAttribute('data-decimals') ? parseInt(el.getAttribute('data-decimals')) : 0;
+        el.textContent = '0';
+        animateNumber(el, target, decimals);
+      });
+
+      // 2) PCB traces light up left→right
+      traceLines.forEach((line, idx) => {
+        const length = 1200;
+        const delay = idx * 200;
+        setTimeout(() => {
+          line.style.transition = 'stroke-dasharray 1.2s cubic-bezier(0.2, 0.9, 0.3, 1)';
+          line.style.strokeDasharray = `${length} 0`;
+        }, delay + 300);
+      });
+
+      // 3) Electric pulses (repeating)
+      pulseDots.forEach((dot, i) => {
+        dot.style.opacity = '0';
+        const delay = 400 + i * 350;
+        setTimeout(() => {
+          // Initial flash
+          dot.style.transition = 'opacity 0.2s, transform 0.3s';
+          dot.style.opacity = '0.9';
+          dot.style.transform = 'scale(2.2)';
+          setTimeout(() => {
+            dot.style.opacity = '0';
+            dot.style.transform = 'scale(0.5)';
+          }, 400);
+          // Repeat every 2.2s
+          setInterval(() => {
+            dot.style.transition = 'opacity 0.15s, transform 0.25s';
+            dot.style.opacity = '0.9';
+            dot.style.transform = 'scale(2.4)';
+            setTimeout(() => {
+              dot.style.opacity = '0';
+              dot.style.transform = 'scale(0.3)';
+            }, 350);
+          }, 2200 + i * 300);
+        }, delay);
+      });
+    }
+
+    // Check if stats section is in viewport
+    const statsSection = document.getElementById('stats');
+    if (statsSection) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !animationStarted) {
+            animationStarted = true;
+            startStatsAnimation();
+          }
+        });
+      }, { threshold: 0.35 });
+      observer.observe(statsSection);
+    }
+
+    // Fallback: if already visible on load
+    setTimeout(() => {
+      if (!animationStarted) {
+        const rect = statsSection?.getBoundingClientRect();
+        if (rect && rect.top < window.innerHeight * 0.7) {
+          animationStarted = true;
+          startStatsAnimation();
+        }
+      }
+    }, 600);
+
+    // Scroll retry
+    window.addEventListener('scroll', function() {
+      if (!animationStarted) {
+        const rect = statsSection?.getBoundingClientRect();
+        if (rect && rect.top < window.innerHeight * 0.75) {
+          animationStarted = true;
+          startStatsAnimation();
+        }
+      }
+    });
+
+  })();
+</script>
+</body>
+</html>

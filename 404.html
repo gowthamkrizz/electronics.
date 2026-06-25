@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - Component Not Found | Stackly Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/header-footer.css">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .error-page {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: var(--color-bg, #0f1419);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Robot Scan Line Background */
+  .error-page__bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background-image: 
+      radial-gradient(circle at 20% 50%, #6FE0A0 1px, transparent 1px),
+      radial-gradient(circle at 80% 20%, #C97C3D 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* Animated Scan Line */
+  .error-page__scan {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .error-page__scan::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #6FE0A0, transparent);
+    box-shadow: 0 0 30px rgba(111, 224, 160, 0.4);
+    animation: scanMove 3s ease-in-out infinite;
+  }
+
+  @keyframes scanMove {
+    0% { top: -2px; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  /* Rotating Gears - bigger and repositioned */
+  .error-page__gears {
+    position: absolute;
+    right: 8%;
+    top: 12%;
+    width: 180px;
+    height: 180px;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .gear {
+    position: absolute;
+    border: 3px solid #6FE0A0;
+    border-radius: 50%;
+    animation: gearSpin 8s linear infinite;
+  }
+
+  .gear--1 {
+    width: 120px;
+    height: 120px;
+    top: 0;
+    right: 0;
+    animation-duration: 6s;
+  }
+
+  .gear--1::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 45px;
+    height: 45px;
+    background: #6FE0A0;
+    border-radius: 50%;
+    opacity: 0.3;
+  }
+
+  .gear--2 {
+    width: 75px;
+    height: 75px;
+    bottom: 0;
+    left: 0;
+    animation-duration: 4s;
+    animation-direction: reverse;
+    border-color: #C97C3D;
+  }
+
+  .gear--2::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 28px;
+    background: #C97C3D;
+    border-radius: 50%;
+    opacity: 0.3;
+  }
+
+  /* Gear teeth */
+  .gear--1::before,
+  .gear--2::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border: 2px dashed #6FE0A0;
+    border-radius: 50%;
+    opacity: 0.4;
+  }
+
+  .gear--2::before {
+    border-color: #C97C3D;
+  }
+
+  @keyframes gearSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Moving Mechanical Arm - bigger */
+  .error-page__arm {
+    position: absolute;
+    left: 6%;
+    bottom: 8%;
+    width: 150px;
+    height: 150px;
+    pointer-events: none;
+    opacity: 0.1;
+  }
+
+  .arm-base {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background: #6FE0A0;
+    border-radius: 50%;
+  }
+
+  .arm-segment {
+    position: absolute;
+    bottom: 35px;
+    left: 50%;
+    transform-origin: bottom center;
+    width: 8px;
+    height: 90px;
+    background: #6FE0A0;
+    border-radius: 4px;
+    animation: armSweep 4s ease-in-out infinite;
+  }
+
+  .arm-segment::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22px;
+    height: 22px;
+    background: #C97C3D;
+    border-radius: 50%;
+  }
+
+  @keyframes armSweep {
+    0% { transform: rotate(-35deg); }
+    50% { transform: rotate(35deg); }
+    100% { transform: rotate(-35deg); }
+  }
+
+  .error-page__content {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .error-page__code {
+    font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+    font-size: 10rem;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(135deg, #6FE0A0, #C97C3D);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.05em;
+  }
+
+  .error-page__title {
+    color: #ffffff;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .error-page__title .robot-emoji {
+    display: inline-block;
+    animation: robotIdle 2s ease-in-out infinite;
+  }
+
+  @keyframes robotIdle {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-5px) rotate(-5deg); }
+    75% { transform: translateY(-3px) rotate(5deg); }
+  }
+
+  .error-page__text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.25rem;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .error-page__text .highlight {
+    color: #6FE0A0;
+    font-weight: 500;
+  }
+
+  .error-page__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    justify-content: center;
+  }
+
+  .error-page__actions .btn {
+    min-width: 180px;
+    padding: 0.9rem 2rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn--secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .btn--secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-3px);
+  }
+
+  .btn--primary {
+    background: var(--color-accent, #6FE0A0);
+    color: #0a0f14;
+    font-weight: 600;
+  }
+
+  .btn--primary:hover {
+    background: #5cd090;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 35px rgba(111, 224, 160, 0.3);
+  }
+
+  /* Blinking LED dots */
+  .error-page__leds {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .led {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .led--green {
+    background: #6FE0A0;
+    animation: ledBlink 1.2s ease-in-out infinite;
+    box-shadow: 0 0 12px rgba(111, 224, 160, 0.6);
+  }
+
+  .led--orange {
+    background: #C97C3D;
+    animation: ledBlink 1.8s ease-in-out infinite 0.3s;
+    box-shadow: 0 0 12px rgba(201, 124, 61, 0.6);
+  }
+
+  .led--red {
+    background: #e06060;
+    animation: ledBlink 2.4s ease-in-out infinite 0.6s;
+    box-shadow: 0 0 12px rgba(224, 96, 96, 0.5);
+  }
+
+  @keyframes ledBlink {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.2; transform: scale(0.8); }
+  }
+
+  /* Extra decorative grid lines - tech feel */
+  .error-page__grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: 
+      linear-gradient(rgba(111, 224, 160, 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(111, 224, 160, 0.3) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  @media (max-width: 768px) {
+    .error-page__code {
+      font-size: 6rem;
+    }
+    .error-page__title {
+      font-size: 1.6rem;
+    }
+    .error-page__text {
+      font-size: 1rem;
+      max-width: 90%;
+    }
+    .error-page__actions .btn {
+      min-width: 140px;
+      width: 100%;
+      text-align: center;
+    }
+    .error-page__gears {
+      width: 100px;
+      height: 100px;
+      right: 3%;
+      top: 8%;
+    }
+    .gear--1 {
+      width: 70px;
+      height: 70px;
+    }
+    .gear--2 {
+      width: 45px;
+      height: 45px;
+    }
+    .error-page__arm {
+      width: 80px;
+      height: 80px;
+      left: 3%;
+      bottom: 5%;
+    }
+    .arm-segment {
+      height: 50px;
+      width: 6px;
+    }
+    .arm-base {
+      width: 25px;
+      height: 25px;
+    }
+    .error-page__content {
+      padding: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .error-page__code {
+      font-size: 4.5rem;
+    }
+    .error-page__title {
+      font-size: 1.3rem;
+    }
+    .error-page__text {
+      font-size: 0.9rem;
+    }
+    .led {
+      width: 10px;
+      height: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="vh">Skip to content</a>
+
+<main id="main" style="height:100vh;">
+  <section class="error-page">
+    <div class="error-page__bg" aria-hidden="true"></div>
+    <div class="error-page__grid" aria-hidden="true"></div>
+
+    <!-- Animated Scan Line -->
+    <div class="error-page__scan" aria-hidden="true"></div>
+
+    <!-- Rotating Gears -->
+    <div class="error-page__gears" aria-hidden="true">
+      <div class="gear gear--1"></div>
+      <div class="gear gear--2"></div>
+    </div>
+
+    <!-- Moving Mechanical Arm -->
+    <div class="error-page__arm" aria-hidden="true">
+      <div class="arm-segment"></div>
+      <div class="arm-base"></div>
+    </div>
+
+    <div class="error-page__content">
+      <!-- LED Indicators -->
+      <div class="error-page__leds" aria-hidden="true">
+        <span class="led led--green"></span>
+        <span class="led led--orange"></span>
+        <span class="led led--red"></span>
+      </div>
+
+      <div class="error-page__code">404</div>
+      <h1 class="error-page__title">
+        <span class="robot-emoji">🤖</span> Error: Component Not Found
+      </h1>
+      <p class="error-page__text">
+        Our inspection robot couldn't locate this component in the system.
+        <span class="highlight">🔧 Recalibrating</span> — please try one of the options below.
+      </p>
+      <div class="error-page__actions">
+        <a href="javascript:history.back()" class="btn btn--secondary">
+          ← Go Back
+        </a>
+        <a href="index.html" class="btn btn--primary">
+          🏠 Back to Home
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="js/main.js"></script>
+</body>
+</html>

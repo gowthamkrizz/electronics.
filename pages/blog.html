@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Stackly Mfg.</title>
+<meta name="description" content="Notes on PCB assembly, quality inspection, and supply chain from the Stackly engineering team.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header-footer.css">
+<link rel="stylesheet" href="../css/inner-pages.css">
+<link rel="stylesheet" href="../css/home.css">
+<link rel="stylesheet" href="../css/blog.css">
+<style>
+    /* ===== ADDITIONAL BLOG STYLES ===== */
+    .page-banner--blog {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-banner__particles {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .particle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: var(--signal-green, #6FE0A0);
+        border-radius: 50%;
+        opacity: 0.4;
+        animation: particleFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes particleFloat {
+        0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; }
+        50% { transform: translateY(-30px) scale(1.5); opacity: 0.8; }
+    }
+
+    .page-banner__floaters {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        overflow: hidden;
+    }
+
+    .floater {
+        position: absolute;
+        opacity: 0.15;
+        animation: floaterDrift 20s ease-in-out infinite;
+    }
+
+    .floater--1 {
+        width: 40px;
+        top: 15%;
+        left: 8%;
+        animation-delay: 0s;
+    }
+
+    .floater--2 {
+        width: 30px;
+        bottom: 20%;
+        right: 10%;
+        animation-delay: -5s;
+    }
+
+    .floater--3 {
+        width: 35px;
+        top: 50%;
+        left: 85%;
+        animation-delay: -10s;
+    }
+
+    @keyframes floaterDrift {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        25% { transform: translate(20px, -30px) rotate(10deg); }
+        50% { transform: translate(-10px, 20px) rotate(-5deg); }
+        75% { transform: translate(15px, 10px) rotate(8deg); }
+    }
+
+    .page-banner__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(111, 224, 160, 0.12);
+        padding: 0.3rem 1rem;
+        border-radius: 999px;
+        font-family: var(--font-mono, monospace);
+        font-size: 0.7rem;
+        color: var(--signal-green, #6FE0A0);
+        margin-bottom: 1rem;
+    }
+
+    .badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--signal-green, #6FE0A0);
+        animation: dotPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes dotPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.3; transform: scale(0.6); }
+    }
+
+    .page-banner__stats {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin: 1.5rem 0;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-item strong {
+        display: block;
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        font-size: 1.6rem;
+        color: var(--signal-green, #6FE0A0);
+        line-height: 1.2;
+    }
+
+    .stat-item span {
+        font-size: 0.7rem;
+        color: var(--line-green, #5C8A6B);
+        font-family: var(--font-mono, monospace);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .page-banner__actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+    }
+
+    .btn--pulse {
+        animation: btnPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes btnPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(111, 224, 160, 0.4); }
+        50% { box-shadow: 0 0 0 12px rgba(111, 224, 160, 0); }
+    }
+
+    .scroll-cue {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4rem;
+        color: var(--line-green, #5C8A6B);
+        font-family: var(--font-mono, monospace);
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        opacity: 0.6;
+        z-index: 2;
+    }
+
+    .scroll-cue__mouse {
+        display: block;
+        width: 22px;
+        height: 34px;
+        border: 2px solid var(--line-green, #5C8A6B);
+        border-radius: 999px;
+        position: relative;
+        opacity: 0.5;
+    }
+
+    .scroll-cue__dot {
+        display: block;
+        width: 4px;
+        height: 8px;
+        background: var(--signal-green, #6FE0A0);
+        border-radius: 999px;
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: scrollDot 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollDot {
+        0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+        50% { transform: translateX(-50%) translateY(14px); opacity: 0.2; }
+    }
+
+    /* ===== FEATURED POST ===== */
+    .featured-post {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        background: var(--pine-soft, #18271F);
+        border-radius: var(--radius, 12px);
+        overflow: hidden;
+        border: 1px solid rgba(236, 231, 216, 0.06);
+    }
+
+    .featured-post__media {
+        overflow: hidden;
+        min-height: 280px;
+    }
+
+    .featured-post__media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+    }
+
+    .featured-post:hover .featured-post__media img {
+        transform: scale(1.04);
+    }
+
+    .featured-post__body {
+        padding: 2rem 2rem 2rem 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .featured-post__body .eyebrow {
+        color: var(--copper, #C97C3D);
+    }
+
+    .featured-post__body p {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+    }
+
+    /* ===== FILTER BAR ===== */
+    .filter-bar {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+    }
+
+    .filter-pill {
+        padding: 0.5rem 1.2rem;
+        border-radius: 999px;
+        border: 1px solid rgba(236, 231, 216, 0.08);
+        background: transparent;
+        color: rgba(255, 255, 255, 0.5);
+        font-family: var(--font-mono, monospace);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: all 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+    }
+
+    .filter-pill:hover {
+        color: var(--cream, #ECE7D8);
+        border-color: rgba(201, 124, 61, 0.3);
+    }
+
+    .filter-pill.is-active {
+        background: rgba(201, 124, 61, 0.2);
+        border-color: var(--copper, #C97C3D);
+        color: var(--cream, #ECE7D8);
+    }
+
+    /* ===== BLOG GRID ===== */
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .blog-card {
+        background: var(--pine-soft, #18271F);
+        border-radius: var(--radius, 12px);
+        overflow: hidden;
+        border: 1px solid rgba(236, 231, 216, 0.06);
+        transition: all 0.4s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(201, 124, 61, 0.25);
+        box-shadow: 0 16px 40px -14px rgba(0, 0, 0, 0.6);
+    }
+
+    .blog-card__media {
+        overflow: hidden;
+        height: 180px;
+    }
+
+    .blog-card__media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+    }
+
+    .blog-card:hover .blog-card__media img {
+        transform: scale(1.05);
+    }
+
+    .blog-card__body {
+        padding: 1.2rem 1.4rem 1.4rem;
+    }
+
+    .blog-card__meta {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-mono, monospace);
+        font-size: 0.6rem;
+        color: var(--line-green, #5C8A6B);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.5rem;
+    }
+
+    .blog-card__body h4 {
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        color: var(--cream, #ECE7D8);
+        line-height: 1.3;
+    }
+
+    .blog-card__body p {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* ===== PAGINATION ===== */
+    .pagination {
+        display: flex;
+        gap: 0.3rem;
+        justify-content: center;
+        margin-top: 2.5rem;
+    }
+
+    .pagination span,
+    .pagination a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 38px;
+        height: 38px;
+        padding: 0 0.8rem;
+        border-radius: var(--radius, 8px);
+        font-family: var(--font-mono, monospace);
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.5);
+        transition: all 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+        text-decoration: none;
+    }
+
+    .pagination span.is-active {
+        background: var(--copper, #C97C3D);
+        color: var(--ink, #0A0F0D);
+        font-weight: 600;
+    }
+
+    .pagination a:hover {
+        background: rgba(201, 124, 61, 0.15);
+        color: var(--cream, #ECE7D8);
+    }
+
+    /* ===== NEWSLETTER ===== */
+    .newsletter-box {
+        background: linear-gradient(135deg, rgba(201, 124, 61, 0.12), rgba(111, 224, 160, 0.06));
+        border-radius: var(--radius, 12px);
+        padding: 3rem;
+        text-align: center;
+        border: 1px solid rgba(201, 124, 61, 0.12);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .newsletter-box::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 30% 50%, rgba(111, 224, 160, 0.05), transparent 70%);
+        pointer-events: none;
+    }
+
+    .newsletter-box h2 {
+        position: relative;
+        z-index: 1;
+    }
+
+    .newsletter-form {
+        display: flex;
+        gap: 0.8rem;
+        max-width: 500px;
+        margin: 1.5rem auto 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .newsletter-form input {
+        flex: 1;
+        padding: 0.8rem 1.2rem;
+        border-radius: 999px;
+        border: 1px solid rgba(236, 231, 216, 0.1);
+        background: rgba(10, 15, 13, 0.4);
+        color: var(--cream, #ECE7D8);
+        font-family: var(--font-body, 'IBM Plex Sans', sans-serif);
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+    }
+
+    .newsletter-form input:focus {
+        border-color: var(--signal-green, #6FE0A0);
+    }
+
+    .newsletter-form input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    .newsletter-form .btn {
+        white-space: nowrap;
+        padding: 0.8rem 1.8rem;
+        font-family: var(--font-mono, monospace);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: all 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+    }
+
+    .newsletter-form .btn--primary {
+        background: var(--signal-green, #6FE0A0);
+        color: var(--ink, #0A0F0D);
+        font-weight: 600;
+        border: none;
+    }
+
+    .newsletter-form .btn--primary:hover {
+        background: #5cd090;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(111, 224, 160, 0.25);
+    }
+
+    /* ===== TAG CLOUD - FORCED VISIBILITY FIX ===== */
+    .tag-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+
+    .tag-cloud a {
+        display: inline-block;
+        padding: 0.5rem 1.4rem;
+        border-radius: 999px;
+        background: rgba(201, 124, 61, 0.2) !important;
+        border: 1px solid rgba(201, 124, 61, 0.3) !important;
+        color: #000000 !important;
+        font-family: var(--font-mono, monospace);
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+    }
+
+    .tag-cloud a:hover {
+        background: rgba(201, 124, 61, 0.35) !important;
+        border-color: var(--copper, #C97C3D) !important;
+        color: #000000 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(201, 124, 61, 0.2);
+    }
+
+    /* ===== GRID UTILITY ===== */
+    .grid--3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    .info-card {
+        background: var(--pine-soft, #18271F);
+        border-radius: var(--radius, 12px);
+        padding: 1.8rem;
+        border: 1px solid rgba(236, 231, 216, 0.06);
+        transition: all 0.4s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .info-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(111, 224, 160, 0.2);
+        box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.4);
+    }
+
+    .info-card .eyebrow {
+        font-size: 0.7rem;
+        color: var(--copper, #C97C3D);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+        .blog-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .grid--3 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 880px) {
+        .featured-post {
+            grid-template-columns: 1fr;
+        }
+        .featured-post__body {
+            padding: 1.5rem;
+        }
+        .featured-post__media {
+            min-height: 200px;
+        }
+        .page-banner__stats {
+            gap: 1rem;
+        }
+        .stat-item strong {
+            font-size: 1.2rem;
+        }
+        .page-banner__floaters {
+            display: none;
+        }
+        .scroll-cue {
+            display: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .blog-grid {
+            grid-template-columns: 1fr;
+        }
+        .grid--3 {
+            grid-template-columns: 1fr;
+        }
+        .newsletter-form {
+            flex-direction: column;
+        }
+        .newsletter-box {
+            padding: 2rem 1.5rem;
+        }
+        .page-banner__stats {
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .filter-bar {
+            justify-content: center;
+        }
+        .pagination span,
+        .pagination a {
+            min-width: 32px;
+            height: 32px;
+            font-size: 0.7rem;
+        }
+        .tag-cloud a {
+            padding: 0.35rem 0.9rem;
+            font-size: 0.6rem;
+        }
+    }
+</style>
+</head>
+<body>
+
+<a href="#main" class="vh">Skip to content</a>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a href="../index.html" class="brand">
+      <img src="../logo.webp" alt="Stackly Logo" class="logo-img">
+    </a>
+    <nav class="nav-main">
+      <span class="nav-indicator" aria-hidden="true"></span>
+      <a href="../index.html" data-nav="index.html">Home</a>
+      <a href="about.html" data-nav="about.html">About Us</a>
+      <a href="services.html" data-nav="services.html">Services</a>
+      <a href="projects.html" data-nav="projects.html">Projects</a>
+      <a href="blog.html" data-nav="blog.html" class="is-active">Blog</a>
+      <a href="contact.html" data-nav="contact.html">Contact</a>
+      <a href="../login.html" class="mobile-login-btn">Login / Sign Up</a>
+    </nav>
+    <div class="header-cta">
+      <a href="../login.html" class="btn btn--ghost btn--login">Login / Sign Up</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- 1. ENHANCED PAGE BANNER / HERO -->
+  <section class="page-banner page-banner--blog">
+    <div class="page-banner__bg">
+      <img src="../images/4.webp" alt="Engineer writing notes at a workbench">
+    </div>
+    
+    <!-- Animated particles -->
+    <div class="page-banner__particles" aria-hidden="true">
+      <span class="particle" style="top:15%;left:10%;animation-delay:0s;"></span>
+      <span class="particle" style="top:25%;left:85%;animation-delay:1.2s;"></span>
+      <span class="particle" style="top:65%;left:5%;animation-delay:2.5s;"></span>
+      <span class="particle" style="top:75%;left:90%;animation-delay:0.8s;"></span>
+      <span class="particle" style="top:45%;left:50%;animation-delay:1.8s;"></span>
+      <span class="particle" style="top:10%;left:45%;animation-delay:3.2s;"></span>
+      <span class="particle" style="top:85%;left:35%;animation-delay:0.4s;"></span>
+      <span class="particle" style="top:50%;left:20%;animation-delay:2.1s;"></span>
+    </div>
+
+    <!-- Decorative floating shapes -->
+    <div class="page-banner__floaters" aria-hidden="true">
+      <svg class="floater floater--1" viewBox="0 0 32 32" fill="none">
+        <path d="M16 3L29 10L16 17L3 10L16 3Z" fill="#C97C3D"/>
+        <path d="M3 16L16 23L29 16" stroke="#6FE0A0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M3 22.5L16 29.5L29 22.5" stroke="#6FE0A0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+      </svg>
+      <svg class="floater floater--2" viewBox="0 0 24 24" fill="none" stroke="#6FE0A0" stroke-width="1.4">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8" cy="8" r="1.4" fill="#6FE0A0" stroke="none"/>
+      </svg>
+      <svg class="floater floater--3" viewBox="0 0 24 24" fill="none" stroke="#C97C3D" stroke-width="1.4">
+        <path d="M4 17l4-10 4 8 3-5 5 7"/>
+      </svg>
+    </div>
+
+    <div class="page-banner__inner">
+      <nav class="breadcrumb"><a href="../index.html">Home</a> <span>/</span> Blog</nav>
+      
+      <!-- Hero badge -->
+      <div class="page-banner__badge">
+        <span class="badge-dot"></span>
+        Engineering Insights
+      </div>
+      
+      <h1>Notes from the manufacturing floor.</h1>
+      <p class="page-banner__lede">Process, quality, and supply chain — written by the engineers who run the lines, not a marketing team.</p>
+      
+      <!-- Enhanced stats strip -->
+      <div class="page-banner__stats">
+        <div class="stat-item">
+          <strong>50+</strong>
+          <span>Articles Published</span>
+        </div>
+        <div class="stat-item">
+          <strong>12k+</strong>
+          <span>Monthly Readers</span>
+        </div>
+        <div class="stat-item">
+          <strong>4</strong>
+          <span>Topics Covered</span>
+        </div>
+        <div class="stat-item">
+          <strong>600+</strong>
+          <span>Engineering Hours</span>
+        </div>
+      </div>
+
+      <div class="page-banner__actions">
+        <a href="../404.html" class="btn btn--primary btn--pulse">Read Latest</a>
+        <a href="../404.html" class="btn btn--ghost">Subscribe</a>
+      </div>
+    </div>
+
+    <div class="scroll-cue"><span class="scroll-cue__mouse"><span class="scroll-cue__dot"></span></span>Scroll</div>
+  </section>
+
+  <!-- 2. FEATURED POST -->
+  <section class="section" id="featured-post">
+    <div class="container">
+      <div class="featured-post reveal-up">
+        <div class="featured-post__media"><img src="../images/5.webp" alt="Close up of SMT placement head"></div>
+        <div class="featured-post__body">
+          <span class="eyebrow">Featured · Process</span>
+          <h2 style="font-size:clamp(1.5rem,3vw,2rem);margin:0.8rem 0">Why your first PCB spin probably needs a DFM pass</h2>
+          <p>The footprint mistakes that don't show up until the panel is already in the oven — and how a 48-hour review catches them before they cost a respin.</p>
+          <a href="../404.html" class="btn btn--primary" style="width:fit-content">Read Article</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. FILTER + POST GRID -->
+  <section class="section section--pine">
+    <div class="container">
+      <div class="section-head reveal-up"><span class="eyebrow">All Articles</span><h2>Browse by topic</h2></div>
+      <div class="filter-bar">
+        <button class="filter-pill is-active" data-filter="all">All</button>
+        <button class="filter-pill" data-filter="process">Process</button>
+        <button class="filter-pill" data-filter="quality">Quality</button>
+        <button class="filter-pill" data-filter="supply">Supply Chain</button>
+      </div>
+      <div class="blog-grid reveal-stagger">
+        <a href="../404.html" class="blog-card" data-cat="process">
+          <div class="blog-card__media"><img src="../images/6.webp" alt="SMT placement head"></div>
+          <div class="blog-card__body"><div class="blog-card__meta"><span>Process</span><span>·</span><span>6 min read</span></div><h4>Why your first PCB spin probably needs a DFM pass</h4><p>The footprint mistakes that don't show up until the panel is already in the oven.</p></div>
+        </a>
+        <a href="../404.html" class="blog-card" data-cat="quality">
+          <div class="blog-card__media"><img src="../images/7.webp" alt="Inspector reviewing a board"></div>
+          <div class="blog-card__body"><div class="blog-card__meta"><span>Quality</span><span>·</span><span>4 min read</span></div><h4>AOI vs. X-ray: when each one actually matters</h4><p>Optical inspection sees the surface. Some defects only show up underneath.</p></div>
+        </a>
+        <a href="../404.html" class="blog-card" data-cat="supply">
+          <div class="blog-card__media"><img src="../images/8.webp" alt="Component reels staged for kitting"></div>
+          <div class="blog-card__body"><div class="blog-card__meta"><span>Supply Chain</span><span>·</span><span>5 min read</span></div><h4>What component lifecycle risk actually costs you</h4><p>A part going end-of-life mid-program is more common than most BOMs admit.</p></div>
+        </a>
+        <a href="../404.html" class="blog-card" data-cat="process">
+          <div class="blog-card__media"><img src="../images/9.webp" alt="Reflow oven thermal profile"></div>
+          <div class="blog-card__body"><div class="blog-card__meta"><span>Process</span><span>·</span><span>5 min read</span></div><h4>One thermal profile per board, every single time</h4><p>Why we log reflow profiles per board family instead of running a generic curve.</p></div>
+        </a>
+        <a href="../404.html" class="blog-card" data-cat="quality">
+          <div class="blog-card__media"><img src="../images/10.webp" alt="Functional test fixture"></div>
+          <div class="blog-card__body"><div class="blog-card__meta"><span>Quality</span><span>·</span><span>7 min read</span></div><h4>Designing a test fixture before the board exists</h4><p>Functional test fixtures work best when they're scoped during layout, not after.</p></div>
+        </a>
+        <a href="../404.html" class="blog-card" data-cat="supply">
+          <div class="blog-card__media"><img src="../images/11.webp" alt="Component allocation chart"></div>
+          <div class="blog-card__body"><div class="blog-card__meta"><span>Supply Chain</span><span>·</span><span>4 min read</span></div><h4>Reading an allocation notice before it becomes a problem</h4><p>What "extended lead time" actually means for your production schedule.</p></div>
+        </a>
+      </div>
+      <div class="pagination">
+        <span class="is-active">1</span>
+        <a href="../404.html">2</a>
+        <a href="../404.html">→</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. NEWSLETTER - UPDATED WITH VALIDATION + REDIRECT -->
+  <section class="section" id="newsletter">
+    <div class="container">
+      <div class="newsletter-box reveal-up">
+        <span class="eyebrow" style="justify-content:center">Stay In The Loop</span>
+        <h2 style="margin-top:0.8rem;font-size:clamp(1.4rem,2.6vw,1.9rem)">One email a month. No sales pitches.</h2>
+        <form class="newsletter-form" id="newsletterForm" novalidate>
+          <label class="vh" for="newsletter-email">Email address</label>
+          <input type="email" id="newsletter-email" placeholder="you@company.com" required>
+          <button type="submit" class="btn btn--primary" id="newsletterBtn">Subscribe</button>
+        </form>
+        <p id="newsletterMessage" style="margin-top:0.8rem;font-size:0.8rem;color:var(--line-green);display:none;"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. POPULAR TOPICS - FIXED VISIBILITY WITH !important -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head reveal-up"><span class="eyebrow">Popular Topics</span><h2>Browse by tag</h2></div>
+      <div class="tag-cloud reveal-up">
+        <a href="../404.html">DFM Review</a>
+        <a href="../404.html">Reflow Profiles</a>
+        <a href="../404.html">X-Ray Inspection</a>
+        <a href="../404.html">Component Sourcing</a>
+        <a href="../404.html">Functional Test</a>
+        <a href="../404.html">IPC Standards</a>
+        <a href="../404.html">Box Build</a>
+        <a href="../404.html">Lead Time</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. EDITOR'S PICKS -->
+  <section class="section section--pine">
+    <div class="container">
+      <div class="section-head reveal-up"><span class="eyebrow">Editor's Picks</span><h2>Start here if you're new</h2></div>
+      <div class="grid grid--3 reveal-stagger">
+        <a href="../404.html" class="info-card" style="display:block">
+          <span class="eyebrow" style="margin-bottom:0.8rem">01</span>
+          <h4 style="font-family:var(--font-display);font-size:1.05rem;margin-bottom:0.5rem">How to read a Stackly quote</h4>
+          <p style="color:var(--line-green);font-size:0.9rem">What's actually included in the number, line by line.</p>
+        </a>
+        <a href="../404.html" class="info-card" style="display:block">
+          <span class="eyebrow" style="margin-bottom:0.8rem">02</span>
+          <h4 style="font-family:var(--font-display);font-size:1.05rem;margin-bottom:0.5rem">Prototype to production, without a redesign</h4>
+          <p style="color:var(--line-green);font-size:0.9rem">Planning your first build so volume doesn't force a board revision.</p>
+        </a>
+        <a href="../404.html" class="info-card" style="display:block">
+          <span class="eyebrow" style="margin-bottom:0.8rem">03</span>
+          <h4 style="font-family:var(--font-display);font-size:1.05rem;margin-bottom:0.5rem">A plain-language guide to IPC-A-610 classes</h4>
+          <p style="color:var(--line-green);font-size:0.9rem">Class 1, 2, and 3 — and which one your product actually needs.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. JUST PUBLISHED -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal-up">
+        <span class="eyebrow">Just Published</span>
+        <h2>Latest from the team</h2>
+      </div>
+      <div class="blog-grid reveal-stagger">
+        <a href="../404.html" class="blog-card">
+          <div class="blog-card__media"><img src="../images/2.webp" alt="Quality engineer at a workstation"></div>
+          <div class="blog-card__body">
+            <div class="blog-card__meta"><span>Quality</span><span>·</span><span>3 min read</span></div>
+            <h4>The five-minute pre-ship check we never skip</h4>
+            <p>A short list that catches most packaging mistakes before they leave the building.</p>
+          </div>
+        </a>
+        
+        <a href="../404.html" class="blog-card">
+          <div class="blog-card__media"><img src="../images/3.webp" alt="SMT placement machine in operation"></div>
+          <div class="blog-card__body">
+            <div class="blog-card__meta"><span>Process</span><span>·</span><span>4 min read</span></div>
+            <h4>Optimizing pick-and-place for high-mix production</h4>
+            <p>How we balance speed and accuracy across 4 SMT lines with constantly changing product mixes.</p>
+          </div>
+        </a>
+        
+        <a href="../404.html" class="blog-card">
+          <div class="blog-card__media"><img src="../images/4.webp" alt="Component inventory management"></div>
+          <div class="blog-card__body">
+            <div class="blog-card__meta"><span>Supply Chain</span><span>·</span><span>5 min read</span></div>
+            <h4>Reducing component lead time risk in 2026</h4>
+            <p>Three strategies we're using to keep production flowing despite global supply chain volatility.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. CTA -->
+  <section class="section cta">
+    <span class="cta__shape cta__shape--1"></span>
+    <span class="cta__shape cta__shape--3"></span>
+    <div class="container cta__inner reveal-up">
+      <span class="eyebrow" style="justify-content:center;">Have a Question?</span>
+      <h2>Ask an engineer, not a salesperson.</h2>
+      <p>If something in these articles applies to your build, send us the details.</p>
+      <div class="cta__actions"><a href="../404.html" class="btn btn--primary btn--pulse">Contact Us</a></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-top">
+    <div class="footer-brand">
+      <a href="../index.html" class="brand">
+        <img src="../logo.webp" alt="Stackly Logo" class="logo-img">
+      </a>
+      <p>Contract electronics manufacturing for medical, industrial, and aerospace OEMs. Prototype to volume, under one roof.</p>
+      <div class="footer-social">
+        <a href="../404.html" aria-label="LinkedIn">in</a>
+        <a href="../404.html" aria-label="X / Twitter">𝕏</a>
+        <a href="../404.html" aria-label="YouTube">▶</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Capabilities</h4>
+      <ul>
+        <li><a href="../404.html">SMT Assembly</a></li>
+        <li><a href="../404.html">Box Build</a></li>
+        <li><a href="../404.html">Functional Test</a></li>
+        <li><a href="../404.html">DFM Review</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Visit</h4>
+      <ul>
+        <li>MMR Complex, Near Chinna Thirupathi<br>Salem, Tamil Nadu 636008</li>
+        <li><a href="../404.html">+1 (517) 555-0148</a></li>
+        <li><a href="../404.html">hello@stackly.example</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© 2026 Stackly Manufacturing Co.</span>
+    <span><a href="../404.html">Privacy Policy</a> · <a href="../404.html">Terms of Service</a></span>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+<script>
+  // ===== FILTER FUNCTIONALITY =====
+  document.querySelectorAll('.filter-bar .filter-pill').forEach(function(pill){
+    pill.addEventListener('click', function(){
+      document.querySelectorAll('.filter-bar .filter-pill').forEach(function(p){p.classList.remove('is-active');});
+      pill.classList.add('is-active');
+      var f = pill.getAttribute('data-filter');
+      document.querySelectorAll('.blog-grid .blog-card').forEach(function(card){
+        if (!card.hasAttribute('data-cat')) return;
+        var show = (f === 'all' || card.getAttribute('data-cat') === f);
+        card.style.display = show ? '' : 'none';
+      });
+    });
+  });
+
+  // ===== NEWSLETTER FORM WITH VALIDATION + REDIRECT TO 404 =====
+  (function() {
+    var form = document.getElementById('newsletterForm');
+    var emailInput = document.getElementById('newsletter-email');
+    var messageEl = document.getElementById('newsletterMessage');
+    var submitBtn = document.getElementById('newsletterBtn');
+
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get email value and trim
+        var email = emailInput.value.trim();
+
+        // Basic email validation
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var isValid = emailRegex.test(email);
+
+        if (!isValid) {
+          // Show error message
+          messageEl.style.display = 'block';
+          messageEl.style.color = '#E06A6A';
+          messageEl.textContent = '⚠️ Please enter a valid email address.';
+          emailInput.style.borderColor = '#E06A6A';
+          return;
+        }
+
+        // Valid email - show success message
+        messageEl.style.display = 'block';
+        messageEl.style.color = 'var(--signal-green, #6FE0A0)';
+        messageEl.textContent = '✅ Thanks for subscribing! Redirecting...';
+        emailInput.style.borderColor = 'var(--signal-green, #6FE0A0)';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Subscribing...';
+
+        // Redirect to 404 page after 1.2 seconds
+        setTimeout(function() {
+          window.location.href = '../404.html';
+        }, 1200);
+      });
+
+      // Clear error state on input
+      emailInput.addEventListener('input', function() {
+        messageEl.style.display = 'none';
+        emailInput.style.borderColor = '';
+      });
+    }
+  })();
+</script>
+</body>
+</html>

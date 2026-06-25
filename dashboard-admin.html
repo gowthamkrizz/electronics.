@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"/>
+    <title>Admin Dashboard · Stackly</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --ink: #0A0F0D;
+            --pine: #122019;
+            --pine-soft: #18271F;
+            --line-green: #5C8A6B;
+            --signal-green: #6FE0A0;
+            --copper: #C97C3D;
+            --copper-bright: #E0A062;
+            --cream: #ECE7D8;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'IBM Plex Sans', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+            --radius: 12px;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --sidebar-width: 240px;
+            --sidebar-collapsed: 72px;
+        }
+        body {
+            background: var(--ink);
+            color: var(--cream);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: rgba(10, 15, 13, 0.92);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            border-right: 1px solid rgba(236, 231, 216, 0.06);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 4px 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar-header {
+            padding: 1.2rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-bottom: 1px solid rgba(236, 231, 216, 0.06);
+            flex-shrink: 0;
+            min-height: 72px;
+        }
+
+        .sidebar-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--cream);
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .sidebar-header .brand img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header .brand span {
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-header .admin-badge {
+            background: var(--copper);
+            color: var(--ink);
+            padding: 0.1rem 0.6rem;
+            border-radius: 999px;
+            font-family: var(--font-mono);
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-left: 0.2rem;
+            white-space: nowrap;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0.6rem;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar-nav::-webkit-scrollbar {
+            width: 3px;
+        }
+        .sidebar-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: var(--copper);
+            border-radius: 3px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.7rem 0.8rem;
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            color: rgba(236, 231, 216, 0.6);
+            transition: all 0.3s var(--ease-out);
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 0.2rem;
+        }
+
+        .sidebar-nav a .icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            width: 28px;
+            text-align: center;
+        }
+
+        .sidebar-nav a .label {
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-nav a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%) scaleX(0);
+            width: 3px;
+            height: 60%;
+            background: var(--signal-green);
+            border-radius: 0 3px 3px 0;
+            transition: transform 0.3s var(--ease-out);
+        }
+
+        .sidebar-nav a:hover {
+            color: var(--cream);
+            background: rgba(111, 224, 160, 0.06);
+        }
+
+        .sidebar-nav a.is-active {
+            color: var(--cream);
+            background: rgba(111, 224, 160, 0.08);
+        }
+
+        .sidebar-nav a.is-active::before {
+            transform: translateY(-50%) scaleX(1);
+        }
+
+        .sidebar-footer {
+            padding: 1rem 0.8rem;
+            border-top: 1px solid rgba(236, 231, 216, 0.06);
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.5rem 0.4rem;
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+
+        .sidebar-footer .user-info:hover {
+            background: rgba(236, 231, 216, 0.04);
+        }
+
+        .sidebar-footer .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer .user-avatar.admin {
+            background: linear-gradient(135deg, var(--signal-green), var(--line-green));
+            color: var(--ink);
+        }
+
+        .sidebar-footer .user-details {
+            overflow: hidden;
+            transition: opacity 0.3s;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-footer .user-details .name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--cream);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-footer .user-details .email {
+            font-size: 0.65rem;
+            color: var(--line-green);
+            font-family: var(--font-mono);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-footer .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.6rem 0.8rem;
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: rgba(236, 231, 216, 0.5);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 0.3rem;
+        }
+
+        .sidebar-footer .logout-btn:hover {
+            color: #E06A6A;
+            background: rgba(224, 106, 106, 0.08);
+        }
+
+        .sidebar-footer .logout-btn .icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            width: 28px;
+            text-align: center;
+        }
+
+        /* Sidebar collapsed state */
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed);
+        }
+
+        .sidebar.collapsed .brand span,
+        .sidebar.collapsed .sidebar-nav a .label,
+        .sidebar.collapsed .user-details,
+        .sidebar.collapsed .sidebar-footer .logout-btn .label,
+        .sidebar.collapsed .admin-badge {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed .sidebar-nav a {
+            justify-content: center;
+            padding: 0.7rem 0.4rem;
+        }
+
+        .sidebar.collapsed .sidebar-footer .user-info {
+            justify-content: center;
+        }
+
+        .sidebar.collapsed .sidebar-footer .logout-btn {
+            justify-content: center;
+        }
+
+        /* Sidebar toggle button */
+        .sidebar-toggle {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: rgba(18, 32, 25, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(236, 231, 216, 0.08);
+            border-radius: 10px;
+            padding: 0.5rem 0.7rem;
+            color: var(--cream);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .sidebar-toggle:hover {
+            background: rgba(18, 32, 25, 0.95);
+            border-color: rgba(236, 231, 216, 0.15);
+        }
+
+        .sidebar-toggle .hamburger-icon,
+        .sidebar-toggle .close-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s var(--ease-out);
+        }
+
+        .sidebar-toggle .close-icon {
+            display: none;
+        }
+
+        .sidebar-toggle.is-open .hamburger-icon {
+            display: none;
+        }
+
+        .sidebar-toggle.is-open .close-icon {
+            display: flex;
+        }
+
+        /* Stackly logo in center of mobile view */
+        .sidebar-toggle .logo-icon {
+            display: none;
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--signal-green);
+            gap: 0.3rem;
+            pointer-events: none;
+        }
+
+        .sidebar-toggle .logo-icon img {
+            height: 20px;
+            width: auto;
+        }
+
+        .sidebar-toggle.is-open .logo-icon {
+            display: none;
+        }
+
+        /* When sidebar is closed on mobile, show logo in center */
+        @media (max-width: 768px) {
+            .sidebar-toggle .logo-icon {
+                display: flex;
+            }
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-content.sidebar-collapsed {
+            margin-left: var(--sidebar-collapsed);
+        }
+
+        /* Mobile overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s var(--ease-out);
+        }
+
+        .sidebar-overlay.is-open {
+            display: block;
+            opacity: 1;
+        }
+
+        /* ===== MESH BG ===== */
+        .mesh-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .mesh-pattern {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                radial-gradient(circle at 30% 30%, rgba(111, 224, 160, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(201, 124, 61, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(111, 224, 160, 0.02) 0%, transparent 70%);
+            background-size: 100% 100%;
+        }
+
+        .mesh-hexagons {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 49px,
+                    rgba(111, 224, 160, 0.04) 49px,
+                    rgba(111, 224, 160, 0.04) 50px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 49px,
+                    rgba(111, 224, 160, 0.04) 49px,
+                    rgba(111, 224, 160, 0.04) 50px
+                ),
+                repeating-linear-gradient(
+                    60deg,
+                    transparent,
+                    transparent 84px,
+                    rgba(201, 124, 61, 0.03) 84px,
+                    rgba(201, 124, 61, 0.03) 85px
+                ),
+                repeating-linear-gradient(
+                    -60deg,
+                    transparent,
+                    transparent 84px,
+                    rgba(201, 124, 61, 0.03) 84px,
+                    rgba(201, 124, 61, 0.03) 85px
+                );
+            background-size: 100px 100px, 100px 100px, 170px 170px, 170px 170px;
+            animation: hexPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes hexPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .nodes-container {
+            position: absolute;
+            inset: 0;
+        }
+
+        .node {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--signal-green);
+            box-shadow: 0 0 20px rgba(111, 224, 160, 0.6), 0 0 60px rgba(111, 224, 160, 0.2);
+            animation: nodePulse 3s ease-in-out infinite;
+        }
+
+        .node:nth-child(1) { top: 12%; left: 8%; animation-delay: 0s; }
+        .node:nth-child(2) { top: 25%; left: 85%; animation-delay: 0.4s; background: var(--copper); box-shadow: 0 0 20px rgba(201, 124, 61, 0.6), 0 0 60px rgba(201, 124, 61, 0.2); }
+        .node:nth-child(3) { top: 55%; left: 5%; animation-delay: 0.8s; }
+        .node:nth-child(4) { top: 70%; left: 90%; animation-delay: 1.2s; background: var(--copper); box-shadow: 0 0 20px rgba(201, 124, 61, 0.6), 0 0 60px rgba(201, 124, 61, 0.2); }
+        .node:nth-child(5) { top: 40%; left: 50%; animation-delay: 1.6s; width: 12px; height: 12px; }
+        .node:nth-child(6) { top: 85%; left: 15%; animation-delay: 2s; }
+        .node:nth-child(7) { top: 10%; left: 50%; animation-delay: 2.4s; background: var(--copper); box-shadow: 0 0 20px rgba(201, 124, 61, 0.6), 0 0 60px rgba(201, 124, 61, 0.2); }
+        .node:nth-child(8) { top: 90%; left: 60%; animation-delay: 2.8s; }
+        .node:nth-child(9) { top: 45%; left: 20%; animation-delay: 0.2s; width: 6px; height: 6px; }
+        .node:nth-child(10) { top: 60%; left: 70%; animation-delay: 1s; width: 6px; height: 6px; }
+
+        @keyframes nodePulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.8); opacity: 1; }
+        }
+
+        .network-lines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .network-lines svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .network-lines line {
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            animation: linePulse 4s ease-in-out infinite;
+        }
+
+        .network-lines line:nth-child(1) { stroke: rgba(111, 224, 160, 0.15); animation-delay: 0s; }
+        .network-lines line:nth-child(2) { stroke: rgba(201, 124, 61, 0.12); animation-delay: 0.5s; }
+        .network-lines line:nth-child(3) { stroke: rgba(111, 224, 160, 0.1); animation-delay: 1s; }
+        .network-lines line:nth-child(4) { stroke: rgba(201, 124, 61, 0.12); animation-delay: 1.5s; }
+        .network-lines line:nth-child(5) { stroke: rgba(111, 224, 160, 0.08); animation-delay: 2s; }
+        .network-lines line:nth-child(6) { stroke: rgba(201, 124, 61, 0.1); animation-delay: 2.5s; }
+        .network-lines line:nth-child(7) { stroke: rgba(111, 224, 160, 0.12); animation-delay: 3s; }
+        .network-lines line:nth-child(8) { stroke: rgba(201, 124, 61, 0.08); animation-delay: 3.5s; }
+
+        @keyframes linePulse {
+            0%, 100% { opacity: 0.3; stroke-width: 1.5; }
+            50% { opacity: 1; stroke-width: 2.5; }
+        }
+
+        /* ===== CARD STYLES ===== */
+        .card {
+            background: rgba(18, 32, 25, 0.55);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(236, 231, 216, 0.08);
+            border-radius: var(--radius);
+            padding: 1.4rem 1.6rem;
+            transition: all 0.4s var(--ease-out);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background: linear-gradient(90deg, var(--copper), var(--signal-green));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(111, 224, 160, 0.06), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(111, 224, 160, 0.2);
+            box-shadow: 0 16px 48px -14px rgba(0, 0, 0, 0.6), 0 0 30px rgba(111, 224, 160, 0.05);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card h3 {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            color: var(--line-green);
+            letter-spacing: 0.08em;
+            margin-bottom: 0.4rem;
+        }
+
+        .card .value {
+            font-size: 2rem;
+            font-family: var(--font-display);
+            color: var(--signal-green);
+        }
+
+        .card .change {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--copper-bright);
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .page-section {
+            display: none;
+            animation: fadeIn 0.4s var(--ease-out);
+        }
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-banner {
+            background: rgba(18, 32, 25, 0.4);
+            backdrop-filter: blur(12px) saturate(160%);
+            -webkit-backdrop-filter: blur(12px) saturate(160%);
+            border-radius: var(--radius);
+            padding: 1.8rem 2.2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(236, 231, 216, 0.06);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+        }
+
+        .welcome-banner h1 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+        }
+
+        .welcome-banner p {
+            color: var(--line-green);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+            margin-top: 1.8rem;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .half-width {
+            grid-column: span 2;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 220px;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .chart-container-sm {
+            height: 180px;
+        }
+        .chart-container-md {
+            height: 240px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th {
+            text-align: left;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            color: var(--line-green);
+            padding: 0.7rem 0.3rem;
+            border-bottom: 1px solid rgba(236, 231, 216, 0.06);
+            letter-spacing: 0.06em;
+        }
+
+        td {
+            padding: 0.7rem 0.3rem;
+            border-bottom: 1px solid rgba(236, 231, 216, 0.03);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 999px;
+            font-family: var(--font-mono);
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: rgba(111, 224, 160, 0.15);
+            color: var(--signal-green);
+        }
+        .status-badge.pending {
+            background: rgba(201, 124, 61, 0.15);
+            color: var(--copper-bright);
+        }
+        .status-badge.completed {
+            background: rgba(92, 138, 107, 0.2);
+            color: var(--line-green);
+        }
+        .status-badge.critical {
+            background: rgba(201, 61, 61, 0.2);
+            color: #E06A6A;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-top: 0.8rem;
+        }
+
+        .quick-actions a {
+            background: rgba(201, 124, 61, 0.12);
+            padding: 0.6rem 1.2rem;
+            border-radius: 999px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--cream);
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .quick-actions a:hover {
+            background: rgba(201, 124, 61, 0.25);
+            border-color: var(--copper);
+            transform: translateY(-3px);
+        }
+
+        .health-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(236, 231, 216, 0.04);
+            font-size: 0.9rem;
+        }
+        .health-item:last-child {
+            border-bottom: none;
+        }
+
+        .health-item .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 0.6rem;
+        }
+        .status-dot.green {
+            background: var(--signal-green);
+            box-shadow: 0 0 8px rgba(111, 224, 160, 0.3);
+        }
+        .status-dot.orange {
+            background: var(--copper-bright);
+            box-shadow: 0 0 8px rgba(224, 160, 98, 0.3);
+        }
+        .status-dot.red {
+            background: #E06A6A;
+            box-shadow: 0 0 8px rgba(224, 106, 106, 0.3);
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .half-width {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .full-width, .half-width {
+                grid-column: 1;
+            }
+            .welcome-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1.2rem 1.5rem;
+            }
+            .welcome-banner h1 {
+                font-size: 1.4rem;
+            }
+            .card {
+                padding: 1rem 1.2rem;
+            }
+            .card .value {
+                font-size: 1.6rem;
+            }
+            .chart-container {
+                height: 180px;
+            }
+            .chart-container-md {
+                height: 200px;
+            }
+
+            /* Sidebar mobile */
+            .sidebar-header {
+                padding-left: 4rem;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            .sidebar.is-open {
+                transform: translateX(0);
+            }
+            .sidebar-overlay.is-open {
+                display: block;
+                opacity: 1;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .main-content.sidebar-collapsed {
+                margin-left: 0;
+            }
+            .sidebar-toggle {
+                display: flex;
+            }
+            .sidebar.collapsed {
+                width: 280px;
+            }
+            .sidebar.collapsed .brand span,
+            .sidebar.collapsed .sidebar-nav a .label,
+            .sidebar.collapsed .user-details,
+            .sidebar.collapsed .sidebar-footer .logout-btn .label,
+            .sidebar.collapsed .admin-badge {
+                opacity: 1;
+                width: auto;
+                overflow: visible;
+            }
+            .sidebar.collapsed .sidebar-nav a {
+                justify-content: flex-start;
+                padding: 0.7rem 0.8rem;
+            }
+            .sidebar.collapsed .sidebar-footer .user-info {
+                justify-content: flex-start;
+            }
+            .sidebar.collapsed .sidebar-footer .logout-btn {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 0.8rem;
+            }
+            .welcome-banner {
+                padding: 1rem 1.2rem;
+            }
+            .sidebar {
+                width: 260px;
+            }
+            .sidebar-toggle {
+                top: 0.6rem;
+                left: 0.6rem;
+                padding: 0.4rem 0.5rem;
+                min-width: 38px;
+                min-height: 38px;
+                font-size: 1rem;
+            }
+            .sidebar-toggle .logo-icon img {
+                height: 16px;
+            }
+            .sidebar-toggle .logo-icon {
+                font-size: 0.7rem;
+            }
+        }
+
+        [data-aos] {
+            pointer-events: none;
+        }
+        [data-aos].aos-animate {
+            pointer-events: auto;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .table-wrap table {
+            min-width: 600px;
+        }
+
+        @media (max-width: 600px) {
+            .table-wrap table {
+                min-width: 500px;
+                font-size: 0.8rem;
+            }
+            .table-wrap th,
+            .table-wrap td {
+                padding: 0.4rem 0.2rem;
+            }
+        }
+
+        .clickable-404 {
+            cursor: pointer;
+        }
+        
+        .quick-actions a, .btn-logout, .sidebar-nav a, .mobile-menu-overlay a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR OVERLAY (mobile) ===== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="brand">
+                <img src="logo.webp" alt="Stackly Logo">
+                <span>Stackly</span>
+                <span class="admin-badge">Admin</span>
+            </a>
+        </div>
+        <nav class="sidebar-nav" id="sidebarNav">
+            <a class="is-active" data-section="dashboard">
+                <span class="icon">📊</span>
+                <span class="label">Dashboard</span>
+            </a>
+            <a data-section="orders">
+                <span class="icon">📦</span>
+                <span class="label">Orders</span>
+            </a>
+            <a data-section="quality">
+                <span class="icon">✅</span>
+                <span class="label">Quality</span>
+            </a>
+            <a data-section="reports">
+                <span class="icon">📊</span>
+                <span class="label">Reports</span>
+            </a>
+            <a data-section="settings">
+                <span class="icon">⚙️</span>
+                <span class="label">Settings</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar admin" id="userAvatar">AD</div>
+                <div class="user-details">
+                    <div class="name" id="userNameDisplay">Admin</div>
+                    <div class="email" id="userEmailDisplay">admin@stackly.com</div>
+                </div>
+            </div>
+            <a href="login.html" class="logout-btn" id="logoutBtn">
+                <span class="icon">🚪</span>
+                <span class="label">Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== SIDEBAR TOGGLE BUTTON (mobile) - with hamburger, close, and logo ===== -->
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">
+        <span class="hamburger-icon">☰</span>
+        <span class="close-icon">✕</span>
+    </button>
+
+    <!-- ===== MESH BG ===== -->
+    <div class="mesh-bg">
+        <div class="mesh-pattern"></div>
+        <div class="mesh-hexagons"></div>
+        <div class="nodes-container">
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+        </div>
+        <svg class="network-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <line x1="8" y1="12" x2="25" y2="85" />
+            <line x1="8" y1="12" x2="50" y2="40" />
+            <line x1="25" y1="85" x2="50" y2="40" />
+            <line x1="25" y1="85" x2="85" y2="70" />
+            <line x1="50" y1="40" x2="85" y2="25" />
+            <line x1="85" y1="25" x2="90" y2="90" />
+            <line x1="85" y1="70" x2="90" y2="90" />
+            <line x1="50" y1="40" x2="90" y2="90" />
+            <line x1="8" y1="12" x2="50" y2="10" />
+            <line x1="50" y1="10" x2="85" y2="25" />
+            <line x1="15" y1="90" x2="25" y2="85" />
+            <line x1="15" y1="90" x2="50" y2="40" />
+        </svg>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content" id="mainContent">
+        <div class="container" style="padding-top:2rem;padding-bottom:4rem;position:relative;z-index:1;">
+
+            <div class="page-section active" id="section-dashboard">
+                <div class="welcome-banner" data-aos="fade-up" data-aos-duration="800">
+                    <div>
+                        <h1>📊 Admin Dashboard</h1>
+                        <p>Manufacturing intelligence &amp; quality metrics — real-time</p>
+                    </div>
+                    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+                        <div><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">TOTAL UNITS</span><div style="font-size:1.4rem;font-family:var(--font-display);color:var(--signal-green);">12,847</div></div>
+                        <div><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">AVG YIELD</span><div style="font-size:1.4rem;font-family:var(--font-display);color:var(--signal-green);">99.4%</div></div>
+                        <div><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">DEFECT RATE</span><div style="font-size:1.4rem;font-family:var(--font-display);color:var(--copper-bright);">0.6%</div></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card" data-aos="fade-up" data-aos-delay="50" 
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📦 Total Production</h3>
+                        <div class="value">12,847</div>
+                        <div class="change">↑ 8.2% this month</div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="100"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>✅ Pass Rate</h3>
+                        <div class="value">99.4%</div>
+                        <div class="change">↑ 0.3% vs last month</div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="150"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>⚠️ Defect Rate</h3>
+                        <div class="value">0.6%</div>
+                        <div class="change">↓ 0.1% improvement</div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="200"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📊 Quality Score</h3>
+                        <div class="value">98.7</div>
+                        <div class="change">↑ 1.2 points</div>
+                    </div>
+                    <div class="card half-width" data-aos="fade-up" data-aos-delay="250"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>🍩 Pass / Fail Ratio</h3>
+                        <div class="chart-container chart-container-sm">
+                            <canvas id="adminDoughnut"></canvas>
+                        </div>
+                    </div>
+                    <div class="card half-width" data-aos="fade-up" data-aos-delay="300"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📈 Defect Rate Trend (30 days)</h3>
+                        <div class="chart-container chart-container-sm">
+                            <canvas id="adminArea"></canvas>
+                        </div>
+                    </div>
+                    <div class="card full-width" data-aos="fade-up" data-aos-delay="350"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📊 Monthly Quality Score</h3>
+                        <div class="chart-container chart-container-md">
+                            <canvas id="adminLine"></canvas>
+                        </div>
+                    </div>
+                    <div class="card full-width" data-aos="fade-up" data-aos-delay="400"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>🔬 Product Testing Results (by batch)</h3>
+                        <div class="chart-container chart-container-md">
+                            <canvas id="adminBar"></canvas>
+                        </div>
+                    </div>
+                    <div class="card full-width" data-aos="fade-up" data-aos-delay="450"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>⚡ Quick Actions</h3>
+                        <div class="quick-actions">
+                            <a class="action-404">Run Quality Report</a>
+                            <a class="action-404">Export Data</a>
+                            <a class="action-404">View Defect Log</a>
+                            <a class="action-404">Schedule Audit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-section" id="section-orders">
+                <div class="welcome-banner" data-aos="fade-up" data-aos-duration="800">
+                    <div>
+                        <h1>📦 Order Management</h1>
+                        <p>Track all orders across the manufacturing floor</p>
+                    </div>
+                    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+                        <div><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">ACTIVE</span><div style="font-size:1.4rem;font-family:var(--font-display);color:var(--signal-green);">47</div></div>
+                        <div><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">PENDING</span><div style="font-size:1.4rem;font-family:var(--font-display);color:var(--copper-bright);">12</div></div>
+                        <div><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">COMPLETED</span><div style="font-size:1.4rem;font-family:var(--font-display);color:var(--line-green);">384</div></div>
+                    </div>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="card" data-aos="fade-up" data-aos-delay="50"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📦 Total Orders</h3>
+                        <div class="value">443</div>
+                        <div class="change">↑ 12% this quarter</div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="100"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>⏳ In Production</h3>
+                        <div class="value">28</div>
+                        <div class="change">8 this week</div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="150"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📋 Awaiting Approval</h3>
+                        <div class="value">19</div>
+                        <div class="change">3 urgent</div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="200"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>✅ Shipped This Month</h3>
+                        <div class="value">156</div>
+                        <div class="change">↑ 8% vs last month</div>
+                    </div>
+                    <div class="card full-width" data-aos="fade-up" data-aos-delay="250"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📋 All Orders</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead><tr><th>Order ID</th><th>Project</th><th>Client</th><th>Status</th><th>Units</th><th>Date</th></tr></thead>
+                                <tbody>
+                                    <tr><td>#1024</td><td>Patient Monitor Mainboard</td><td>Veridian Health</td><td><span class="status-badge active">Active</span></td><td>250</td><td>Jun 15</td></tr>
+                                    <tr><td>#1023</td><td>Conveyor Control Module</td><td>Ferrotype Ind.</td><td><span class="status-badge pending">Pending</span></td><td>100</td><td>Jun 10</td></tr>
+                                    <tr><td>#1022</td><td>Avionics Sensor Interface</td><td>Altus Aerospace</td><td><span class="status-badge completed">Completed</span></td><td>45</td><td>May 28</td></tr>
+                                    <tr><td>#1021</td><td>Infusion Pump Controller</td><td>Halcyon Medical</td><td><span class="status-badge active">Active</span></td><td>320</td><td>Jun 12</td></tr>
+                                    <tr><td>#1020</td><td>Power Distribution Unit</td><td>Northbeam Energy</td><td><span class="status-badge critical">Urgent</span></td><td>180</td><td>Jun 14</td></tr>
+                                    <tr><td>#1019</td><td>Wearable Fitness Tracker</td><td>PulseTech</td><td><span class="status-badge completed">Completed</span></td><td>500</td><td>May 20</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-section" id="section-quality">
+                <div class="welcome-banner" data-aos="fade-up" data-aos-duration="800">
+                    <div>
+                        <h1>✅ Quality Management</h1>
+                        <p>Monitor quality metrics, defects, and inspection results</p>
+                    </div>
+                    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+                        <div><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">OVERALL PASS</span><div style="font-size:1.4rem;font-family:var(--font-display);color:var(--signal-green);">99.4%</div></div>
+                        <div><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">DEFECTS</span><div style="font-size:1.4rem;font-family:var(--font-display);color:var(--copper-bright);">0.6%</div></div>
+                        <div><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">INSPECTIONS</span><div style="font-size:1.4rem;font-family:var(--font-display);color:var(--signal-green);">12,847</div></div>
+                    </div>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="card" data-aos="fade-up" data-aos-delay="50"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>✅ Pass Rate</h3>
+                        <div class="value">99.4%</div>
+                        <div class="change">↑ 0.3% vs last month</div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="100"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>⚠️ Defect Rate</h3>
+                        <div class="value">0.6%</div>
+                        <div class="change">↓ 0.1% improvement</div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="150"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>🔍 Inspections Done</h3>
+                        <div class="value">12,847</div>
+                        <div class="change">100% coverage</div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="200"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📊 Quality Score</h3>
+                        <div class="value">98.7</div>
+                        <div class="change">↑ 1.2 points</div>
+                    </div>
+                    <div class="card half-width" data-aos="fade-up" data-aos-delay="250"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>🍩 Pass / Fail Ratio</h3>
+                        <div class="chart-container chart-container-sm">
+                            <canvas id="adminDoughnut2"></canvas>
+                        </div>
+                    </div>
+                    <div class="card half-width" data-aos="fade-up" data-aos-delay="300"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📈 Defect Rate Trend</h3>
+                        <div class="chart-container chart-container-sm">
+                            <canvas id="adminArea2"></canvas>
+                        </div>
+                    </div>
+                    <div class="card full-width" data-aos="fade-up" data-aos-delay="350"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📊 Monthly Quality Score</h3>
+                        <div class="chart-container chart-container-md">
+                            <canvas id="adminLine2"></canvas>
+                        </div>
+                    </div>
+                    <div class="card full-width" data-aos="fade-up" data-aos-delay="400"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📊 System Health</h3>
+                        <div style="margin-top:0.6rem;">
+                            <div class="health-item"><span><span class="status-dot green"></span>SMT Lines</span><span style="color:var(--signal-green);">Operational</span></div>
+                            <div class="health-item"><span><span class="status-dot green"></span>AOI Systems</span><span style="color:var(--signal-green);">Operational</span></div>
+                            <div class="health-item"><span><span class="status-dot green"></span>X-Ray Inspection</span><span style="color:var(--signal-green);">Operational</span></div>
+                            <div class="health-item"><span><span class="status-dot orange"></span>Supply Chain</span><span style="color:var(--copper-bright);">2 parts on allocation</span></div>
+                            <div class="health-item"><span><span class="status-dot green"></span>Functional Test</span><span style="color:var(--signal-green);">Operational</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-section" id="section-reports">
+                <div class="welcome-banner" data-aos="fade-up" data-aos-duration="800">
+                    <div>
+                        <h1>📊 Reports & Analytics</h1>
+                        <p>Comprehensive manufacturing and quality reports</p>
+                    </div>
+                    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+                        <div><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">REPORTS</span><div style="font-size:1.4rem;font-family:var(--font-display);color:var(--signal-green);">24</div></div>
+                        <div><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">THIS MONTH</span><div style="font-size:1.4rem;font-family:var(--font-display);color:var(--copper-bright);">6</div></div>
+                    </div>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="card" data-aos="fade-up" data-aos-delay="50"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📊 Reports Generated</h3>
+                        <div class="value">24</div>
+                        <div class="change">↑ 4 this month</div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="100"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📈 Quality Reports</h3>
+                        <div class="value">12</div>
+                        <div class="change">6 this quarter</div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="150"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📦 Production Reports</h3>
+                        <div class="value">8</div>
+                        <div class="change">3 this month</div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="200"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📋 Custom Reports</h3>
+                        <div class="value">4</div>
+                        <div class="change">2 in progress</div>
+                    </div>
+                    <div class="card full-width" data-aos="fade-up" data-aos-delay="250"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📋 Available Reports</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead><tr><th>Report Name</th><th>Type</th><th>Generated</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Monthly Quality Summary</td><td>Quality</td><td>Jun 1, 2026</td><td><span class="status-badge completed">Ready</span></td></tr>
+                                    <tr><td>Defect Analysis Report</td><td>Quality</td><td>Jun 15, 2026</td><td><span class="status-badge active">Updated</span></td></tr>
+                                    <tr><td>Production Efficiency</td><td>Production</td><td>Jun 10, 2026</td><td><span class="status-badge completed">Ready</span></td></tr>
+                                    <tr><td>Supply Chain Performance</td><td>Supply Chain</td><td>Jun 5, 2026</td><td><span class="status-badge pending">Pending</span></td></tr>
+                                    <tr><td>Annual Quality Report</td><td>Quality</td><td>Dec 31, 2025</td><td><span class="status-badge completed">Archived</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card full-width" data-aos="fade-up" data-aos-delay="300"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>⚡ Report Actions</h3>
+                        <div class="quick-actions">
+                            <a class="action-404">Generate New Report</a>
+                            <a class="action-404">Export All Data</a>
+                            <a class="action-404">View Quality Dashboard</a>
+                            <a class="action-404">Schedule Report</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-section" id="section-settings">
+                <div class="welcome-banner" data-aos="fade-up" data-aos-duration="800">
+                    <div>
+                        <h1>⚙️ System Settings</h1>
+                        <p>Configure your dashboard, preferences, and system parameters</p>
+                    </div>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="card" data-aos="fade-up" data-aos-delay="50"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>👤 Profile</h3>
+                        <div style="margin-top:0.5rem;">
+                            <p style="color:var(--line-green);">Admin User</p>
+                            <p style="color:var(--line-green);" id="profileEmail">admin@stackly.com</p>
+                            <div class="quick-actions" style="margin-top:0.8rem;">
+                                <a class="action-404">Edit Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="100"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>🔔 Notifications</h3>
+                        <div style="margin-top:0.5rem;">
+                            <p style="color:var(--line-green);">Email alerts: <span style="color:var(--signal-green);">Enabled</span></p>
+                            <p style="color:var(--line-green);">Push notifications: <span style="color:var(--signal-green);">Enabled</span></p>
+                            <div class="quick-actions" style="margin-top:0.8rem;">
+                                <a class="action-404">Configure</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="150"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>🔒 Security</h3>
+                        <div style="margin-top:0.5rem;">
+                            <p style="color:var(--line-green);">2FA: <span style="color:var(--signal-green);">Active</span></p>
+                            <p style="color:var(--line-green);">Session: <span style="color:var(--signal-green);">Secure</span></p>
+                            <div class="quick-actions" style="margin-top:0.8rem;">
+                                <a class="action-404">Manage</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="200"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📊 Preferences</h3>
+                        <div style="margin-top:0.5rem;">
+                            <p style="color:var(--line-green);">Theme: <span style="color:var(--signal-green);">Dark</span></p>
+                            <p style="color:var(--line-green);">Language: <span style="color:var(--signal-green);">English</span></p>
+                            <div class="quick-actions" style="margin-top:0.8rem;">
+                                <a class="action-404">Customize</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card full-width" data-aos="fade-up" data-aos-delay="250"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>⚡ System Actions</h3>
+                        <div class="quick-actions">
+                            <a class="action-404">Backup System</a>
+                            <a class="action-404">Clear Cache</a>
+                            <a class="action-404">Export Logs</a>
+                            <a class="action-404">Restart Services</a>
+                            <a class="action-404">Help & Support</a>
+                        </div>
+                    </div>
+                    <div class="card full-width" data-aos="fade-up" data-aos-delay="300"
+                         onmousemove="this.style.setProperty('--mouse-x', event.offsetX + 'px'); this.style.setProperty('--mouse-y', event.offsetY + 'px')">
+                        <h3>📋 System Information</h3>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:0.8rem;">
+                            <div style="background:rgba(10,15,13,0.3);padding:0.8rem;border-radius:var(--radius);backdrop-filter:blur(4px);">
+                                <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">Version</span>
+                                <div style="font-size:1.1rem;font-family:var(--font-display);color:var(--signal-green);">v3.2.1</div>
+                            </div>
+                            <div style="background:rgba(10,15,13,0.3);padding:0.8rem;border-radius:var(--radius);backdrop-filter:blur(4px);">
+                                <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">Uptime</span>
+                                <div style="font-size:1.1rem;font-family:var(--font-display);color:var(--signal-green);">14d 6h</div>
+                            </div>
+                            <div style="background:rgba(10,15,13,0.3);padding:0.8rem;border-radius:var(--radius);backdrop-filter:blur(4px);">
+                                <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--line-green);">Last Update</span>
+                                <div style="font-size:1.1rem;font-family:var(--font-display);color:var(--signal-green);">Jun 15, 2026</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // ===== SIDEBAR NAVIGATION =====
+        function navigateTo(sectionId) {
+            document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                link.classList.toggle('is-active', link.dataset.section === sectionId);
+            });
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.toggle('active', section.id === 'section-' + sectionId);
+            });
+            closeSidebar();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goTo404() {
+            window.location.href = '404.html';
+        }
+
+        // ===== SIDEBAR TOGGLE =====
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const mainContent = document.getElementById('mainContent');
+
+        function openSidebar() {
+            sidebar.classList.add('is-open');
+            sidebarOverlay.classList.add('is-open');
+            sidebarToggle.classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('is-open');
+            sidebarOverlay.classList.remove('is-open');
+            sidebarToggle.classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        function toggleSidebar() {
+            if (sidebar.classList.contains('is-open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        }
+
+        // Desktop: hover to expand/collapse
+        let sidebarTimeout;
+        if (window.innerWidth > 768) {
+            sidebar.addEventListener('mouseenter', function() {
+                clearTimeout(sidebarTimeout);
+                this.classList.remove('collapsed');
+                mainContent.classList.remove('sidebar-collapsed');
+            });
+
+            sidebar.addEventListener('mouseleave', function() {
+                sidebarTimeout = setTimeout(() => {
+                    this.classList.add('collapsed');
+                    mainContent.classList.add('sidebar-collapsed');
+                }, 300);
+            });
+
+            sidebar.classList.add('collapsed');
+            mainContent.classList.add('sidebar-collapsed');
+        }
+
+        // Mobile: toggle with hamburger
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeSidebar();
+        });
+
+        // ===== SIDEBAR NAV LINKS =====
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.section);
+            });
+        });
+
+        // ===== QUICK ACTION LINKS =====
+        document.querySelectorAll('.action-404').forEach(el => {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                goTo404();
+            });
+        });
+
+        // ===== LOGOUT =====
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            // Let default href go to login.html
+        });
+
+        // ===== USER INFO =====
+        function getLoggedInEmail() {
+            const stored = localStorage.getItem('stacklyUserEmail');
+            if (stored) return stored;
+            const params = new URLSearchParams(window.location.search);
+            const emailFromUrl = params.get('email');
+            if (emailFromUrl) {
+                const decoded = decodeURIComponent(emailFromUrl);
+                localStorage.setItem('stacklyUserEmail', decoded);
+                return decoded;
+            }
+            const signupEmail = localStorage.getItem('stackly_user_email');
+            if (signupEmail) {
+                localStorage.setItem('stacklyUserEmail', signupEmail);
+                return signupEmail;
+            }
+            return 'admin@stackly.com';
+        }
+
+        const userEmail = getLoggedInEmail();
+
+        function getNameFromEmail(email) {
+            if (!email) return 'Admin';
+            const parts = email.split('@');
+            if (parts.length > 0) {
+                const name = parts[0].replace(/[._-]/g, ' ');
+                return name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            }
+            return 'Admin';
+        }
+
+        const userName = getNameFromEmail(userEmail);
+        const initials = userEmail !== 'admin@stackly.com' ? userEmail.split('@')[0].substring(0, 2).toUpperCase() : 'AD';
+
+        document.querySelectorAll('#userEmailDisplay, #profileEmail').forEach(el => {
+            if (el) el.textContent = userEmail;
+        });
+        document.querySelectorAll('#userNameDisplay').forEach(el => {
+            if (el) el.textContent = userName;
+        });
+        document.querySelectorAll('#userAvatar').forEach(el => {
+            if (el) el.textContent = initials;
+        });
+
+        // ===== LENIS SMOOTH SCROLL =====
+        const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        // ===== AOS =====
+        AOS.init({ once: false, mirror: false, duration: 700, offset: 20, easing: 'ease-out-cubic' });
+
+        // ===== CHARTS =====
+        const chartColors = {
+            green: '#6FE0A0',
+            copper: '#C97C3D',
+            copperBright: '#E0A062',
+            lineGreen: '#5C8A6B',
+            cream: '#ECE7D8',
+            red: '#E06A6A',
+            blue: '#5B9BD5',
+            purple: '#9B6B9B'
+        };
+
+        function createDoughnut(id, pass, fail) {
+            const ctx = document.getElementById(id);
+            if (!ctx) return;
+            new Chart(ctx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pass', 'Fail'],
+                    datasets: [{ data: [pass, fail], backgroundColor: [chartColors.green, chartColors.red],
+                        borderColor: 'rgba(10,15,13,0.8)', borderWidth: 2 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: chartColors
+                                .cream, font: { family: 'IBM Plex Mono', size: 11 } } } }, cutout: '65%' }
+            });
+        }
+
+        function createArea(id, data) {
+            const ctx = document.getElementById(id);
+            if (!ctx) return;
+            new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8'],
+                    datasets: [{ label: 'Defect Rate %', data: data || [0.8, 0.7, 0.9, 0.6, 0.5, 0.7, 0.4,
+                            0.6
+                        ], backgroundColor: 'rgba(111,224,160,0.2)', borderColor: chartColors.green,
+                        borderWidth: 2, fill: true, tension: 0.4, pointBackgroundColor: chartColors.copper,
+                        pointRadius: 4 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: chartColors
+                                .cream, font: { family: 'IBM Plex Mono', size: 10 } } } }, scales: { x: { ticks: { color: chartColors
+                                    .lineGreen, font: { size: 10 } }, grid: { color: 'rgba(236,231,216,0.05)' } },
+                        y: { ticks: { color: chartColors.lineGreen, font: { size: 10 } }, grid: { color: 'rgba(236,231,216,0.05)' },
+                            min: 0, max: 1.2 } } }
+            });
+        }
+
+        function createLine(id, data, target) {
+            const ctx = document.getElementById(id);
+            if (!ctx) return;
+            new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Quality Score',
+                        data: data || [94, 95, 96, 95.5, 97, 96.8, 98, 98.2, 98.5, 98.7, 98.9, 98.7],
+                        borderColor: chartColors.copper,
+                        backgroundColor: 'rgba(201,124,61,0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: chartColors.copperBright,
+                        pointRadius: 5,
+                    }, {
+                        label: 'Target',
+                        data: Array(12).fill(target || 98),
+                        borderColor: chartColors.lineGreen,
+                        borderWidth: 2,
+                        borderDash: [6, 4],
+                        fill: false,
+                        pointRadius: 0,
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: chartColors
+                                .cream, font: { family: 'IBM Plex Mono', size: 10 } } } }, scales: { x: { ticks: { color: chartColors
+                                    .lineGreen, font: { size: 10 } }, grid: { color: 'rgba(236,231,216,0.05)' } },
+                        y: { ticks: { color: chartColors.lineGreen, font: { size: 10 } }, grid: { color: 'rgba(236,231,216,0.05)' },
+                            min: 90, max: 100 } } }
+            });
+        }
+
+        function createBar(id, labels, data1, data2) {
+            const ctx = document.getElementById(id);
+            if (!ctx) return;
+            new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels || ['Batch A', 'Batch B', 'Batch C', 'Batch D', 'Batch E', 'Batch F'],
+                    datasets: [{ label: 'Passed', data: data1 || [480, 520, 495, 510, 505, 490],
+                        backgroundColor: chartColors.green, borderRadius: 4 }, { label: 'Failed', data: data2 ||
+                            [20, 15, 25, 10, 18, 22], backgroundColor: chartColors.red,
+                        borderRadius: 4 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: chartColors
+                                .cream, font: { family: 'IBM Plex Mono', size: 10 } } } }, scales: { x: { ticks: { color: chartColors
+                                    .lineGreen, font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: chartColors
+                                    .lineGreen, font: { size: 10 } }, grid: { color: 'rgba(236,231,216,0.05)' } } } }
+            });
+        }
+
+        createDoughnut('adminDoughnut', 99.4, 0.6);
+        createDoughnut('adminDoughnut2', 99.4, 0.6);
+        createArea('adminArea', [0.8, 0.7, 0.9, 0.6, 0.5, 0.7, 0.4, 0.6]);
+        createArea('adminArea2', [0.8, 0.7, 0.9, 0.6, 0.5, 0.7, 0.4, 0.6]);
+        createLine('adminLine', [94, 95, 96, 95.5, 97, 96.8, 98, 98.2, 98.5, 98.7, 98.9, 98.7], 98);
+        createLine('adminLine2', [94, 95, 96, 95.5, 97, 96.8, 98, 98.2, 98.5, 98.7, 98.9, 98.7], 98);
+        createBar('adminBar', ['Batch A', 'Batch B', 'Batch C', 'Batch D', 'Batch E', 'Batch F'], [480, 520, 495, 510,
+            505, 490
+        ], [20, 15, 25, 10, 18, 22]);
+
+        document.querySelectorAll('.btn-logout, .quick-actions a, .sidebar-nav a, .sidebar-toggle').forEach(el => {
+            if (window.matchMedia('(pointer: fine)').matches && !el.closest('.sidebar-overlay')) {
+                el.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    this.style.transform = `translate(${x*0.08}px, ${y*0.08}px)`;
+                });
+                el.addEventListener('mouseleave', function() { this.style.transform = ''; });
+            }
+        });
+    </script>
+
+</body>
+</html>

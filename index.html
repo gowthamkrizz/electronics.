@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly Electronics — Precision PCB Assembly &amp; Contract Manufacturing</title>
+<meta name="description" content="Stackly designs and manufactures circuit boards and electromechanical assemblies for medical, industrial, and aerospace clients — from prototype to volume production.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/header-footer.css">
+<link rel="stylesheet" href="css/home.css">
+
+<!-- Additional inline styles for PCB counter animation -->
+<style>
+/* Override stats section with PCB animation */
+.stats {
+  position: relative;
+  overflow: hidden;
+  background: #0d131c;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+/* PCB trace canvas overlay */
+.pcb-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.3;
+}
+
+.pcb-canvas-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Pulse dots - electric sparks */
+.pulse-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 24px var(--accent), 0 0 48px var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+  transition: opacity 0.1s;
+}
+
+/* Ensure stats grid stays above canvas */
+.stats-grid {
+  position: relative;
+  z-index: 2;
+}
+
+/* Stats items with glass effect */
+.stat-item {
+  background: rgba(20, 30, 42, 0.6);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 12px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.stat-item strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.stat-item span {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+@media (max-width: 800px) {
+  .stat-item strong { font-size: 2.2rem; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="vh">Skip to content</a>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="site-header__inner">
+    <a href="index.html" class="brand">
+      <img src="logo.webp" alt="Stackly Logo" class="logo-img">
+    </a>
+    <nav class="nav-main">
+      <span class="nav-indicator" aria-hidden="true"></span>
+      <a href="index.html" data-nav="index.html" class="is-active">Home</a>
+      <a href="pages/about.html" data-nav="about.html">About Us</a>
+      <a href="pages/services.html" data-nav="services.html">Services</a>
+      <a href="pages/projects.html" data-nav="projects.html">Projects</a>
+      <a href="pages/blog.html" data-nav="blog.html">Blog</a>
+      <a href="pages/contact.html" data-nav="contact.html">Contact</a>
+      <a href="login.html" class="mobile-login-btn">Login / Sign Up</a>
+    </nav>
+    <div class="header-cta">
+      <a href="login.html" class="btn btn--ghost btn--login">Login / Sign Up</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="hero" id="hero">
+    <div class="hero__bg">
+      <img src="./images/images.webp" alt="Automated PCB assembly line with robotic placement arms">
+    </div>
+
+    <div class="hero__mesh" aria-hidden="true">
+      <span class="hero__blob hero__blob--1"></span>
+      <span class="hero__blob hero__blob--2"></span>
+      <span class="hero__blob hero__blob--3"></span>
+    </div>
+    <div class="hero__grid" aria-hidden="true"></div>
+
+    <div class="hero__data-pulses" aria-hidden="true">
+      <div class="pulse pulse-1"></div>
+      <div class="pulse pulse-2"></div>
+      <div class="pulse pulse-3"></div>
+      <div class="pulse pulse-4"></div>
+      <div class="pulse pulse-5"></div>
+      <div class="pcb-scanner"></div>
+    </div>
+
+    <div class="hero__floaters" data-parallax aria-hidden="true">
+      <svg class="hero__float hero__float--1" data-depth="22" viewBox="0 0 32 32" fill="none">
+        <path d="M16 3L29 10L16 17L3 10L16 3Z" fill="#C97C3D"/>
+        <path d="M3 16L16 23L29 16" stroke="#6FE0A0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M3 22.5L16 29.5L29 22.5" stroke="#6FE0A0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+      </svg>
+      <svg class="hero__float hero__float--2" data-depth="40" viewBox="0 0 24 24" fill="none" stroke="#6FE0A0" stroke-width="1.4">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="1.4" fill="#6FE0A0" stroke="none"/>
+      </svg>
+      <svg class="hero__float hero__float--3" data-depth="14" viewBox="0 0 24 24" fill="none" stroke="#C97C3D" stroke-width="1.4">
+        <path d="M4 17l4-10 4 8 3-5 5 7"/>
+      </svg>
+      <svg class="hero__float hero__float--4" data-depth="30" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="3" fill="#6FE0A0"/>
+      </svg>
+    </div>
+
+    <div class="hero__inner">
+      <span class="eyebrow hero__eyebrow">EST. 2008 — TIER-1 CONTRACT MANUFACTURER</span>
+      <h1 class="hero__title">
+        <span class="hero__line">
+          <span class="word" style="--d:0">Precision</span> <span class="word" style="--d:1">circuits,</span>
+        </span>
+        <span class="hero__line">
+          <span class="word" style="--d:2">built</span> <span class="word" style="--d:3">to</span>
+        </span>
+        <span class="hero__line">
+          <span class="word accent" style="--d:4">survive</span> <span class="word accent" style="--d:5">the</span> <span class="word accent" style="--d:6">real</span> <span class="word accent" style="--d:7">world.</span>
+        </span>
+      </h1>
+      <p class="hero__lede">Stackly takes electronics from schematic to shipped product. <strong>SMT assembly, box-build, and full DFM review</strong> under one roof, with a 24-hour engineering response time.</p>
+      <div class="hero__actions">
+        <a href="404.html" class="btn btn--primary btn--magnetic"><span>Request a Quote</span></a>
+        <a href="404.html" class="btn btn--ghost btn--magnetic"><span>Explore Capabilities</span></a>
+      </div>
+     
+
+    <div class="scroll-cue"><span class="scroll-cue__mouse"><span class="scroll-cue__dot"></span></span>Scroll</div>
+  </section>
+
+  <!-- ============ 2. ABOUT COMPANY ============ -->
+  <section class="section" id="about">
+    <div class="container about__grid">
+      <div class="about__media reveal-left">
+        <img src="./images/2.webp" alt="Engineer inspecting a populated circuit board under magnification">
+        <span class="about__media-tag">Quality Lab — Building 2</span>
+      </div>
+      <div class="reveal-right">
+        <span class="eyebrow">Who We Are</span>
+        <h2>Eighteen years of putting copper exactly where it needs to be.</h2>
+        <p class="lede">Stackly started as a four-person prototyping shop and grew into a 60,000 sq ft facility serving medical, industrial, and aerospace OEMs. We still answer engineering emails ourselves.</p>
+        <ul class="about__list">
+          <li>
+            <span class="num">01</span>
+            <div><h4>Engineering-led, not sales-led</h4><p>Every quote passes through a process engineer before it reaches your inbox, so the number you get is the number that holds.</p></div>
+          </li>
+          <li>
+            <span class="num">02</span>
+            <div><h4>One factory, full traceability</h4><p>Component lot tracking, AOI data, and test logs are tied to every serial number we ship, for the life of the product.</p></div>
+          </li>
+          <li>
+            <span class="num">03</span>
+            <div><h4>Built for awkward volumes</h4><p>We're equally set up for a 25-unit medical pilot run and a 50,000-unit consumer ramp.</p></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. MANUFACTURING SERVICES ============ -->
+  <section class="section section--pine" id="services">
+    <div class="container">
+      <div class="section-head reveal-up">
+        <span class="eyebrow">What We Build</span>
+        <h2>Manufacturing services</h2>
+        <p class="lede">From a single rework to a turnkey production line — six capabilities, one accountable team.</p>
+      </div>
+      <div class="grid grid--3 reveal-stagger">
+
+        <div class="service-card">
+          <div class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M7 7h2M7 12h10M7 17h6"/></svg></div>
+          <h3>PCB Assembly (SMT &amp; THT)</h3>
+          <p>High-speed pick-and-place across 01005 to BGA, with mixed-technology hand soldering for through-hole.</p>
+          <a href="404.html" class="service-card__link">View Capability →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3>Box Build &amp; Final Assembly</h3>
+          <p>Mechanical integration, cable harnessing, and enclosure assembly so you receive a finished unit, not a bare board.</p>
+          <a href="404.html" class="service-card__link">View Capability →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19l5-12 4 8 3-5 4 9"/></svg></div>
+          <h3>Functional &amp; AOI Testing</h3>
+          <p>Custom bed-of-nails and flying-probe fixtures, automated optical inspection, and X-ray for BGA solder joints.</p>
+          <a href="404.html" class="service-card__link">View Capability →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12h4l2-6 4 12 2-6h4"/></svg></div>
+          <h3>Design for Manufacturing</h3>
+          <p>DFM and DFA review before your first build, catching footprint and panelization issues before they cost a spin.</p>
+          <a href="404.html" class="service-card__link">View Capability →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 8h14M5 12h14M5 16h9"/></svg></div>
+          <h3>Rapid Prototyping</h3>
+          <p>48-hour turn on low-volume prototype builds so you can validate a revision before committing to panels.</p>
+          <a href="404.html" class="service-card__link">View Capability →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 4v6c0 4.5-3.5 7-8 8-4.5-1-8-3.5-8-8V7l8-4z"/></svg></div>
+          <h3>Supply Chain &amp; Kitting</h3>
+          <p>Component sourcing, lifecycle risk checks, and kitting against your BOM so builds aren't held up by a single part.</p>
+          <a href="404.html" class="service-card__link">View Capability →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. TECHNOLOGY FEATURES ============ -->
+  <section class="section features" id="features">
+    <div class="container">
+      <div class="section-head reveal-up">
+        <span class="eyebrow">Inside the Factory</span>
+        <h2>Technology that keeps tolerances tight</h2>
+      </div>
+
+      <div class="feature-row">
+        <div class="feature-row__media reveal-left">
+          <img src="./images/3.webp" alt="Pick-and-place machine placing components onto a circuit board">
+        </div>
+        <div class="feature-row__content reveal-right">
+          <span class="feature-row__tag">01</span>
+          <span class="eyebrow">Placement</span>
+          <h3>High-speed pick-and-place, 0.03mm repeatability</h3>
+          <p>Our SMT lines place down to 01005 passives and fine-pitch BGA with vision-aligned placement, holding repeatability that keeps yield consistent across long runs.</p>
+          <div class="feature-row__stats">
+            <div><strong>45k</strong><span>CPH per line</span></div>
+            <div><strong>±0.03mm</strong><span>Placement Accuracy</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-row">
+        <div class="feature-row__media reveal-right">
+          <img src="./images/4.webp" alt="Reflow oven thermal profile monitoring station">
+        </div>
+        <div class="feature-row__content reveal-left">
+          <span class="feature-row__tag">02</span>
+          <span class="eyebrow">Reflow</span>
+          <h3>Profiled reflow for every paste, every panel</h3>
+          <p>Ten-zone reflow ovens run a unique thermal profile per board family, logged and archived so a board built in March solders the same as one built in November.</p>
+          <div class="feature-row__stats">
+            <div><strong>10-zone</strong><span>Thermal Control</span></div>
+            <div><strong>100%</strong><span>Profile Logged</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-row">
+        <div class="feature-row__media reveal-left">
+          <img src="./images/5.webp" alt="X-ray inspection of solder joints on a circuit board">
+        </div>
+        <div class="feature-row__content reveal-right">
+          <span class="feature-row__tag">03</span>
+          <span class="eyebrow">Inspection</span>
+          <h3>AOI and X-ray catch what the eye can't</h3>
+          <p>Every panel passes through automated optical inspection; BGA and QFN joints get X-ray verification, so hidden solder defects are caught before they leave the building.</p>
+          <div class="feature-row__stats">
+            <div><strong>3-stage</strong><span>Inspection Pipeline</span></div>
+            <div><strong>99.4%</strong><span>First-Pass Yield</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ 5. PROCESS / WORKFLOW ============ -->
+  <section class="section process" id="process">
+    <div class="container">
+      <div class="section-head reveal-up">
+        <span class="eyebrow">How a Build Happens</span>
+        <h2>From file drop to finished unit</h2>
+        <p class="lede">A fixed, five-stage path. Nothing moves to the next stage until the one before it is signed off.</p>
+      </div>
+      <div class="process-track reveal-stagger">
+        <div class="process-step">
+          <div class="process-step__node">01</div>
+          <h4>DFM Review</h4>
+          <p>Gerbers and BOM checked for footprint, panelization, and sourcing risk.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-step__node">02</div>
+          <h4>Kitting</h4>
+          <p>Components pulled and lot-tracked against your bill of materials.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-step__node">03</div>
+          <h4>SMT &amp; Reflow</h4>
+          <p>Placement and soldering run against a board-specific thermal profile.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-step__node">04</div>
+          <h4>Inspection &amp; Test</h4>
+          <p>AOI, X-ray, and functional test fixtures verify every unit.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-step__node">05</div>
+          <h4>Pack &amp; Ship</h4>
+          <p>ESD-safe packaging and traceable serials, shipped on your schedule.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. STATISTICS COUNTER - UPDATED WITH PCB ANIMATION ============ -->
+  <section class="section stats" id="stats">
+    <div class="container">
+      <div class="stats-grid reveal-stagger">
+        <div class="stat-item">
+          <strong><span class="counter-num" data-target="500">0</span><span>+</span></strong>
+          <span>Products Manufactured</span>
+        </div>
+        <div class="stat-item">
+          <strong><span class="counter-num" data-target="120">0</span><span>+</span></strong>
+          <span>Global Clients</span>
+        </div>
+        <div class="stat-item">
+          <strong><span class="counter-num" data-target="50">0</span><span>M+</span></strong>
+          <span>Components Produced</span>
+        </div>
+        <div class="stat-item">
+          <strong><span class="counter-num" data-target="99.4" data-decimals="1">0</span><span>%</span></strong>
+          <span>First-Pass Yield</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PCB Trace Canvas Overlay -->
+    <div class="pcb-canvas-wrap" id="pcbCanvas">
+      <svg viewBox="0 0 1200 300" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <g stroke="#6FE0A0" stroke-width="3" fill="none" filter="url(#glow)">
+          <!-- PCB traces that will light up left→right -->
+          <path d="M 40 60 L 1160 60" stroke-dasharray="0 1200" stroke-dashoffset="0" class="trace-line" data-index="0"/>
+          <path d="M 40 120 L 1160 120" stroke-dasharray="0 1200" stroke-dashoffset="0" class="trace-line" data-index="1"/>
+          <path d="M 40 180 L 1160 180" stroke-dasharray="0 1200" stroke-dashoffset="0" class="trace-line" data-index="2"/>
+          <path d="M 40 240 L 1160 240" stroke-dasharray="0 1200" stroke-dashoffset="0" class="trace-line" data-index="3"/>
+        </g>
+        <!-- Vias / pads -->
+        <circle cx="120" cy="60" r="5" fill="#C97C3D" opacity="0.4" />
+        <circle cx="340" cy="120" r="5" fill="#C97C3D" opacity="0.4" />
+        <circle cx="560" cy="180" r="5" fill="#C97C3D" opacity="0.4" />
+        <circle cx="780" cy="240" r="5" fill="#C97C3D" opacity="0.4" />
+        <circle cx="980" cy="60" r="5" fill="#C97C3D" opacity="0.4" />
+        <circle cx="220" cy="240" r="5" fill="#C97C3D" opacity="0.4" />
+        <circle cx="880" cy="120" r="5" fill="#C97C3D" opacity="0.4" />
+      </svg>
+    </div>
+
+    <!-- Electric pulse dots -->
+    <div class="pulse-dot" id="pulse1" style="top:15%; left:6%;"></div>
+    <div class="pulse-dot" id="pulse2" style="top:35%; left:22%;"></div>
+    <div class="pulse-dot" id="pulse3" style="top:55%; left:48%;"></div>
+    <div class="pulse-dot" id="pulse4" style="top:75%; left:70%;"></div>
+    <div class="pulse-dot" id="pulse5" style="top:25%; left:88%;"></div>
+  </section>
+
+  <!-- ============ 7. PROJECTS / PORTFOLIO ============ -->
+  <section class="section" id="portfolio">
+    <div class="container">
+      <div class="section-head reveal-up">
+        <span class="eyebrow">Recent Work</span>
+        <h2>Builds that made it out the door</h2>
+      </div>
+      <div class="portfolio-grid reveal-stagger">
+        <a href="404.html" class="portfolio-card">
+          <img src="./images/6.webp" alt="Medical device circuit board assembly">
+          <div class="portfolio-card__overlay">
+            <span class="portfolio-card__tag">Medical Device</span>
+            <h4>Patient Monitor Mainboard</h4>
+            <span class="portfolio-card__btn">View Project</span>
+          </div>
+        </a>
+        <a href="404.html" class="portfolio-card">
+          <img src="./images/7.webp" alt="Industrial control board with connectors">
+          <div class="portfolio-card__overlay">
+            <span class="portfolio-card__tag">Industrial</span>
+            <h4>Conveyor Control Module</h4>
+            <span class="portfolio-card__btn">View Project</span>
+          </div>
+        </a>
+        <a href="404.html" class="portfolio-card">
+          <img src="./images/8.webp" alt="Aerospace grade circuit assembly">
+          <div class="portfolio-card__overlay">
+            <span class="portfolio-card__tag">Aerospace</span>
+            <h4>Avionics Sensor Interface</h4>
+            <span class="portfolio-card__btn">View Project</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. TESTIMONIALS ============ -->
+  <section class="section testimonials" id="testimonials">
+    <div class="container">
+      <div class="section-head reveal-up" style="margin-left:auto;margin-right:auto;text-align:center;">
+        <span class="eyebrow" style="justify-content:center;">Client Word</span>
+        <h2>What runs on our lines</h2>
+      </div>
+      <div class="testi-track-wrap">
+        <div class="testi-track">
+          <div class="testi-slide">
+            <div class="testi-card">
+              <p class="testi-card__quote">"Stackly caught a footprint mismatch in DFM review that would have cost us a full panel respin. That single catch paid for the engineering fee twenty times over."</p>
+              <div class="testi-card__person">
+                <div class="testi-card__avatar"><img src="./images/pro1.webp" alt="Portrait of Maria Holt"></div>
+                <div><strong>Maria Holt</strong><span>Hardware Lead, Veridian Health</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-slide">
+            <div class="testi-card">
+              <p class="testi-card__quote">"We moved from a 12-week offshore lead time to a 3-week domestic one without raising unit cost. The traceability reporting alone justified the switch."</p>
+              <div class="testi-card__person">
+                <div class="testi-card__avatar"><img src="./images/pro2.webp" alt="Portrait of Devon Okafor"></div>
+                <div><strong>Devon Okafor</strong><span>VP Operations, Ferrotype Industrial</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-slide">
+            <div class="testi-card">
+              <p class="testi-card__quote">"Our flight-qualified sensor board needed X-ray verification on every BGA joint. They built the inspection step into the line instead of treating it as an afterthought."</p>
+              <div class="testi-card__person">
+                <div class="testi-card__avatar"><img src="./images/pro3.webp" alt="Portrait of Priya Subramaniam"></div>
+                <div><strong>Priya Subramaniam</strong><span>Director of Engineering, Altus Aerospace</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-dots"></div>
+    </div>
+  </section>
+
+  <!-- ============ 9. BLOG PREVIEW ============ -->
+  <section class="section section--pine" id="blog">
+    <div class="container">
+      <div class="section-head reveal-up">
+        <span class="eyebrow">From the Floor</span>
+        <h2>Notes on building electronics</h2>
+      </div>
+      <div class="blog-grid reveal-stagger">
+        <a href="pages/single-blog-post.html" class="blog-card">
+          <div class="blog-card__media"><img src="./images/9.webp" alt="Close-up of SMT placement head"></div>
+          <div class="blog-card__body">
+            <div class="blog-card__meta"><span>Process</span><span>·</span><span>6 min read</span></div>
+            <h4>Why your first PCB spin probably needs a DFM pass</h4>
+            <p>The footprint mistakes that don't show up until the panel is already in the oven.</p>
+          </div>
+        </a>
+        <a href="pages/single-blog-post.html" class="blog-card">
+          <div class="blog-card__media"><img src="./images/10.webp" alt="Inspector reviewing a board under magnification"></div>
+          <div class="blog-card__body">
+            <div class="blog-card__meta"><span>Quality</span><span>·</span><span>4 min read</span></div>
+            <h4>AOI vs. X-ray: when each one actually matters</h4>
+            <p>Optical inspection sees the surface. Some defects only show up underneath.</p>
+          </div>
+        </a>
+        <a href="pages/single-blog-post.html" class="blog-card">
+          <div class="blog-card__media"><img src="./images/11.webp" alt="Component reels staged for kitting"></div>
+          <div class="blog-card__body">
+            <div class="blog-card__meta"><span>Supply Chain</span><span>·</span><span>5 min read</span></div>
+            <h4>What component lifecycle risk actually costs you</h4>
+            <p>A part going end-of-life mid-program is more common than most BOMs admit.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 10. CONTACT CTA ============ -->
+  <section class="section cta" id="cta">
+    <span class="cta__shape cta__shape--1"></span>
+    <span class="cta__shape cta__shape--2"></span>
+    <span class="cta__shape cta__shape--3"></span>
+    <div class="container cta__inner reveal-up">
+      <span class="eyebrow" style="justify-content:center;">Start a Build</span>
+      <h2>Send us your Gerbers. We'll send back a real quote.</h2>
+      <p>Most quotes turn around within two business days, with a process engineer's notes attached — not just a price.</p>
+      <div class="cta__actions">
+        <a href="404.html" class="btn btn--primary btn--pulse">Request a Quote</a>
+        <a href="404.html" class="btn btn--ghost">See Capabilities</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container footer-top">
+    <div class="footer-brand">
+      <a href="index.html" class="brand">
+        <img src="logo.webp" alt="Stackly Logo" class="logo-img">
+      </a>
+      <p>Contract electronics manufacturing for medical, industrial, and aerospace OEMs. Prototype to volume, under one roof.</p>
+      <div class="footer-social">
+        <a href="404.html" aria-label="LinkedIn">in</a>
+        <a href="404.html" aria-label="X / Twitter">𝕏</a>
+        <a href="404.html" aria-label="YouTube">▶</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="pages/about.html">About Us</a></li>
+        <li><a href="pages/services.html">Services</a></li>
+        <li><a href="pages/projects.html">Projects</a></li>
+        <li><a href="pages/blog.html">Blog</a></li>
+        <li><a href="pages/contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Capabilities</h4>
+      <ul>
+        <li><a href="404.html">SMT Assembly</a></li>
+        <li><a href="404.html">Box Build</a></li>
+        <li><a href="404.html">Functional Test</a></li>
+        <li><a href="404.html">DFM Review</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Visit</h4>
+      <ul>
+        <li>MMR Complex, Near Chinna Thirupathi<br>Salem, Tamil Nadu 636008</li>
+        <li><a href="404.html">+1 (517) 555-0148</a></li>
+        <li><a href="404.html">hello@stackly.com</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© 2026 Stackly Manufacturing Co.</span>
+    <span><a href="404.html">Privacy Policy</a> · <a href="404.html">Terms of Service</a></span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+
+<!-- Custom script for PCB counter animation -->
+<script>
+(function() {
+  "use strict";
+
+  // Wait for main.js to load, but we'll add our own counter logic
+  // that works alongside existing reveal-stagger animations
+  
+  const statNumbers = document.querySelectorAll('.counter-num');
+  const traceLines = document.querySelectorAll('.trace-line');
+  const pulseDots = document.querySelectorAll('.pulse-dot');
+  
+  let animationStarted = false;
+  let countersInited = false;
+
+  // Animate number counting
+  function animateNumber(el, target, decimals = 0) {
+    let current = 0;
+    const step = Math.max(1, Math.floor(target / 60));
+    const interval = 20;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) {
+        current = target;
+        clearInterval(timer);
+      }
+      el.textContent = current.toFixed(decimals);
+    }, interval);
+  }
+
+  function startStatsAnimation() {
+    if (countersInited) return;
+    countersInited = true;
+
+    // 1) Count numbers
+    statNumbers.forEach(el => {
+      const raw = el.getAttribute('data-target');
+      const target = parseFloat(raw);
+      if (isNaN(target)) return;
+      const decimals = el.hasAttribute('data-decimals') ? parseInt(el.getAttribute('data-decimals')) : 0;
+      el.textContent = '0';
+      animateNumber(el, target, decimals);
+    });
+
+    // 2) PCB traces light up left→right
+    traceLines.forEach((line, idx) => {
+      const length = 1200;
+      const delay = idx * 200;
+      setTimeout(() => {
+        line.style.transition = 'stroke-dasharray 1.2s cubic-bezier(0.2, 0.9, 0.3, 1)';
+        line.style.strokeDasharray = `${length} 0`;
+      }, delay + 300);
+    });
+
+    // 3) Electric pulses (repeating)
+    pulseDots.forEach((dot, i) => {
+      dot.style.opacity = '0';
+      const delay = 400 + i * 350;
+      setTimeout(() => {
+        // Initial flash
+        dot.style.transition = 'opacity 0.2s, transform 0.3s';
+        dot.style.opacity = '0.9';
+        dot.style.transform = 'scale(2.2)';
+        setTimeout(() => {
+          dot.style.opacity = '0';
+          dot.style.transform = 'scale(0.5)';
+        }, 400);
+        // Repeat every 2.2s
+        setInterval(() => {
+          dot.style.transition = 'opacity 0.15s, transform 0.25s';
+          dot.style.opacity = '0.9';
+          dot.style.transform = 'scale(2.4)';
+          setTimeout(() => {
+            dot.style.opacity = '0';
+            dot.style.transform = 'scale(0.3)';
+          }, 350);
+        }, 2200 + i * 300);
+      }, delay);
+    });
+  }
+
+  // Check if stats section is in viewport
+  const statsSection = document.getElementById('stats');
+  if (statsSection) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !animationStarted) {
+          animationStarted = true;
+          startStatsAnimation();
+        }
+      });
+    }, { threshold: 0.35 });
+    observer.observe(statsSection);
+  }
+
+  // Fallback: if already visible on load
+  setTimeout(() => {
+    if (!animationStarted) {
+      const rect = statsSection?.getBoundingClientRect();
+      if (rect && rect.top < window.innerHeight * 0.7) {
+        animationStarted = true;
+        startStatsAnimation();
+      }
+    }
+  }, 600);
+
+  // Scroll retry
+  window.addEventListener('scroll', function() {
+    if (!animationStarted) {
+      const rect = statsSection?.getBoundingClientRect();
+      if (rect && rect.top < window.innerHeight * 0.75) {
+        animationStarted = true;
+        startStatsAnimation();
+      }
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>

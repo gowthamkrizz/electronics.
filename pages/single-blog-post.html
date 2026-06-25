@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Your First PCB Spin Probably Needs a DFM Pass — Stackly Blog</title>
+<meta name="description" content="The footprint mistakes that don't show up until the panel is already in the oven, and how a 48-hour DFM review catches them.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/header-footer.css">
+<link rel="stylesheet" href="../css/inner-pages.css">
+<link rel="stylesheet" href="../css/home.css">
+<link rel="stylesheet" href="../css/single-blog-post.css">
+</head>
+<body>
+
+<a href="#main" class="vh">Skip to content</a>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a href="../index.html" class="brand">
+      <img src="../logo.webp" alt="Stackly Logo" class="logo-img">
+    </a>
+    <nav class="nav-main">
+      <span class="nav-indicator" aria-hidden="true"></span>
+      <a href="../index.html" data-nav="index.html">Home</a>
+      <a href="about.html" data-nav="about.html">About Us</a>
+      <a href="services.html" data-nav="services.html">Services</a>
+      <a href="projects.html" data-nav="projects.html">Projects</a>
+      <a href="blog.html" data-nav="blog.html" class="is-active">Blog</a>
+      <a href="contact.html" data-nav="contact.html">Contact</a>
+      <a href="../login.html" class="mobile-login-btn">Login / Sign Up</a>
+    </nav>
+    <div class="header-cta">
+      <a href="contact.html" class="btn btn--ghost">Get a Quote</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- 1. PAGE BANNER -->
+  <section class="page-banner" style="min-height:38vh;">
+    <div class="page-banner__bg">
+      <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1800&q=80" alt="SMT placement head over a circuit board panel">
+    </div>
+    <div class="page-banner__inner">
+      <nav class="breadcrumb"><a href="../index.html">Home</a> <span>/</span> <a href="blog.html">Blog</a> <span>/</span> Process</nav>
+      <h1>Why your first PCB spin probably needs a DFM pass</h1>
+    </div>
+  </section>
+
+  <!-- 2. ARTICLE META + SHARE -->
+  <section class="section" style="padding-bottom:0">
+    <div class="container" style="max-width:720px;">
+      <div class="article-meta-row reveal-up">
+        <div class="article-author">
+          <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80" alt="Portrait of Wei-Lin Chao">
+          <div><strong>Wei-Lin Chao</strong><span>VP, Manufacturing Engineering · 6 min read</span></div>
+        </div>
+        <div class="article-share">
+          <a href="#" aria-label="Share on LinkedIn">in</a>
+          <a href="#" aria-label="Share on X">𝕏</a>
+          <a href="#" aria-label="Copy link">⎘</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. ARTICLE BODY -->
+  <section class="section" style="padding-top:0">
+    <div class="container layout-with-sidebar">
+      <article class="article-body reveal-up">
+        <p>Almost every board we build for the first time arrives with a schematic the design team is confident in and a layout nobody outside that team has stress-tested against a real production line. That gap is where most early-build problems live — not in the logic, but in the handful of footprint and panelization decisions that only show up once a panel is already moving through reflow.</p>
+
+        <h3>The mismatch that's easy to miss</h3>
+        <p>The most common issue we catch in DFM review is a footprint pad that's technically correct on paper but doesn't account for the paste volume our stencil deposits at production speed. On a prototype build run by hand, it's forgiving. On a panel moving through a ten-zone reflow oven at line speed, a slightly oversized pad on a fine-pitch part is enough to cause solder bridging.</p>
+
+        <figure>
+          <img src="https://images.unsplash.com/photo-1581092160607-ee22731c9c8f?w=900&q=80" alt="Stencil and paste deposit on a circuit board panel during SMT setup">
+          <figcaption>Stencil paste deposit being checked against footprint tolerance before a production run.</figcaption>
+        </figure>
+
+        <p>The second most common catch is panelization — boards designed without enough tooling margin at the edges, or without fiducials placed where our vision system expects to find them. Neither is a design flaw exactly. They're just decisions that look fine in a CAD tool and only matter once the board has to move through a physical machine.</p>
+
+        <blockquote class="pull-quote">A DFM review doesn't second-guess your design. It tells you what your design will do on a real line, before the real line tells you.</blockquote>
+
+        <h3>What a 48-hour review actually checks</h3>
+        <p>Our process engineers run every incoming Gerber set and BOM through the same checklist: footprint and paste-volume compatibility, panelization and tooling margin, fiducial placement, and component lifecycle status against the BOM. Most reviews turn around in two business days, and most catch at least one issue worth fixing before the first panel goes through the oven.</p>
+
+        <div class="takeaway-box">
+          <h4>Key Takeaways</h4>
+          <ul>
+            <li>Footprint pads that look fine in CAD can cause bridging at production paste volumes.</li>
+            <li>Panelization and fiducial placement matter more than most first-time designers expect.</li>
+            <li>A 48-hour DFM review costs far less than a respun panel.</li>
+          </ul>
+        </div>
+
+        <p>None of this requires redesigning the board. Most fixes are footprint or panel-margin adjustments that take an afternoon. The point of running DFM before the first build, rather than after a failed one, is that the fix is cheap when it's still just a file.</p>
+      </article>
+
+      <aside>
+        <div class="sidebar-block reveal-up">
+          <h4>In This Article</h4>
+          <ul style="display:flex;flex-direction:column;gap:0.6rem;">
+            <li><a href="#" style="color:var(--line-green);font-size:0.9rem;">The mismatch that's easy to miss</a></li>
+            <li><a href="#" style="color:var(--line-green);font-size:0.9rem;">What a 48-hour review checks</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-block reveal-up">
+          <h4>Related Reading</h4>
+          <ul style="display:flex;flex-direction:column;gap:0.7rem;">
+            <li><a href="single-blog-post.html" style="color:var(--cream);font-size:0.92rem;">AOI vs. X-ray: when each one actually matters</a></li>
+            <li><a href="single-blog-post.html" style="color:var(--cream);font-size:0.92rem;">One thermal profile per board, every time</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-block reveal-up">
+          <h4>Need a DFM Review?</h4>
+          <p style="color:var(--line-green);font-size:0.9rem;margin-bottom:1rem;">Included free with every quote request.</p>
+          <a href="contact.html" class="btn btn--primary" style="width:100%;justify-content:center;">Request a Quote</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 4. AUTHOR BIO -->
+  <section class="section section--pine" style="padding-top:0">
+    <div class="container" style="max-width:720px;">
+      <div class="author-bio reveal-up">
+        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80" alt="Portrait of Wei-Lin Chao">
+        <div>
+          <h4>Wei-Lin Chao</h4>
+          <p>Wei-Lin leads manufacturing engineering at Stackly and has run DFM review on over 600 client programs across medical, industrial, and aerospace builds.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. RELATED POSTS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal-up"><span class="eyebrow">Keep Reading</span><h2>Related articles</h2></div>
+      <div class="blog-grid reveal-stagger">
+        <a href="single-blog-post.html" class="blog-card">
+          <div class="blog-card__media"><img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=700&q=80" alt="Inspector reviewing a board"></div>
+          <div class="blog-card__body"><div class="blog-card__meta"><span>Quality</span><span>·</span><span>4 min read</span></div><h4>AOI vs. X-ray: when each one actually matters</h4><p>Optical inspection sees the surface. Some defects only show up underneath.</p></div>
+        </a>
+        <a href="single-blog-post.html" class="blog-card">
+          <div class="blog-card__media"><img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=700&q=80" alt="Reflow oven control panel"></div>
+          <div class="blog-card__body"><div class="blog-card__meta"><span>Process</span><span>·</span><span>5 min read</span></div><h4>One thermal profile per board, every single time</h4><p>Why we log reflow profiles per board family instead of running a generic curve.</p></div>
+        </a>
+        <a href="single-blog-post.html" class="blog-card">
+          <div class="blog-card__media"><img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=700&q=80" alt="Component reels staged for kitting"></div>
+          <div class="blog-card__body"><div class="blog-card__meta"><span>Supply Chain</span><span>·</span><span>5 min read</span></div><h4>What component lifecycle risk actually costs you</h4><p>A part going end-of-life mid-program is more common than most BOMs admit.</p></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. DISCUSSION / COMMENTS -->
+  <section class="section section--pine">
+    <div class="container" style="max-width:720px;">
+      <div class="section-head reveal-up"><span class="eyebrow">Discussion</span><h2>2 comments</h2></div>
+      <div class="comments-list reveal-stagger">
+        <div class="comment">
+          <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=100&q=80" alt="Commenter avatar">
+          <div class="comment__body">
+            <strong>R. Falk</strong> <span>· 3 days ago</span>
+            <p>The paste-volume point is exactly what bit us on our first run. Wish we'd sent the Gerbers for review before, not after.</p>
+          </div>
+        </div>
+        <div class="comment">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80" alt="Commenter avatar">
+          <div class="comment__body">
+            <strong>J. Marsh</strong> <span>· 1 week ago</span>
+            <p>Good breakdown of fiducial placement — that one's underrated as a failure point.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. NEWSLETTER CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="newsletter-box reveal-up">
+        <span class="eyebrow" style="justify-content:center">Stay In The Loop</span>
+        <h2 style="margin-top:0.8rem;font-size:clamp(1.4rem,2.6vw,1.9rem)">One email a month. No sales pitches.</h2>
+        <form class="newsletter-form" onsubmit="event.preventDefault();">
+          <label class="vh" for="newsletter-email-2">Email address</label>
+          <input type="email" id="newsletter-email-2" placeholder="you@company.com" required>
+          <button type="submit" class="btn btn--primary">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. CTA -->
+  <section class="section cta">
+    <span class="cta__shape cta__shape--1"></span>
+    <span class="cta__shape cta__shape--2"></span>
+    <div class="container cta__inner reveal-up">
+      <span class="eyebrow" style="justify-content:center;">Have a Board to Review?</span>
+      <h2>Send us your Gerbers.</h2>
+      <p>DFM review is included free with every quote request.</p>
+      <div class="cta__actions"><a href="contact.html" class="btn btn--primary btn--pulse">Request a Quote</a></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-top">
+    <div class="footer-brand">
+      <a href="../index.html" class="brand">
+        <img src="../logo.webp" alt="Stackly Logo" class="logo-img">
+      </a>
+      <p>Contract electronics manufacturing for medical, industrial, and aerospace OEMs. Prototype to volume, under one roof.</p>
+      <div class="footer-social"><a href="#" aria-label="LinkedIn">in</a><a href="#" aria-label="X / Twitter">𝕏</a><a href="#" aria-label="YouTube">▶</a></div>
+    </div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="about.html">About Us</a></li><li><a href="services.html">Services</a></li><li><a href="projects.html">Projects</a></li><li><a href="blog.html">Blog</a></li></ul></div>
+    <div class="footer-col"><h4>Capabilities</h4><ul><li><a href="services.html">SMT Assembly</a></li><li><a href="services.html">Box Build</a></li><li><a href="services.html">Functional Test</a></li><li><a href="services.html">DFM Review</a></li></ul></div>
+    <div class="footer-col"><h4>Visit</h4><ul><li>2210 Foundry Road<br>Lansing, MI 48912</li><li><a href="tel:+15175550148">+1 (517) 555-0148</a></li><li><a href="mailto:hello@stackly.example">hello@stackly.example</a></li></ul></div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© 2026 Stackly Manufacturing Co.</span>
+    <span><a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a></span>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+</body>
+</html>
